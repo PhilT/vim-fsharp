@@ -1,4 +1,4 @@
 @echo off
 cd tests
-nvim -Nu init.vim +Vader*
+nvim -Nu init.vim "+silent Vader*"
 cd ..
