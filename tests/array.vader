@@ -1,0 +1,13 @@
+Given fsharp:
+Do (Multiline arrays):
+  i
+  let anArray = [|\<CR>
+  item1\<CR>
+  item2\<CR>
+  |]
+
+Expect:
+  let anArray = [|
+    item1
+    item2
+  |]
