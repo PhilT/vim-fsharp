@@ -56,7 +56,11 @@ function! FSharpIndent()
     let indent = previous_indent + width
 
   elseif previous_line =~ '^\(let\|type\).*=\(\s\({\|[\|[|\)\)\?$'
-    echom 'Detected: type'
+    echom 'Detected: type/record/array/list'
+    let indent = previous_indent + width
+
+  elseif previous_line =~ '^[\|[|$'
+    echom 'Detected: list'
     let indent = previous_indent + width
 
 "  elseif previous_line =~ '^| .*$'

@@ -11,3 +11,19 @@ Expect:
     item1
     item2
   |]
+
+Do (Function returns array):
+  i
+  let returnsArray =\<CR>
+  [|\<CR>
+  item1\<CR>
+  item2\<CR>
+  |]
+
+Expect:
+  let returnsArray =
+    [|
+      item1
+      item2
+    |]
+

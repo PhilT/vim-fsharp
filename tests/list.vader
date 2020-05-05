@@ -11,3 +11,18 @@ Expect:
     item1
     item2
   ]
+
+Do (Function returns list):
+  i
+  let returnsList =\<CR>
+  [\<CR>
+  item1\<CR>
+  item2\<CR>
+  ]
+
+Expect:
+  let returnsList =
+    [
+      item1
+      item2
+    ]
