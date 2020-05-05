@@ -1,5 +1,5 @@
 Given fsharp:
-Do (A record type):
+Do (Record type):
   i
   type SomeRecordType = {\<CR>
   field1: string\<CR>
@@ -11,4 +11,28 @@ Expect:
     field1: string
     field2: int
   }
+
+Do (Using a Record):
+  i
+  let someVar = {\<CR>
+  field1 = "something"\<CR>
+  field2 = 1\<CR>
+  }
+
+Expect:
+  let someVar = {
+    field1 = "something"
+    field2 = 1
+  }
+
+Do (Discriminated Union):
+  i
+  type SomeDU =\<CR>
+  | Type1 of string\<CR>
+  | Type2 of string
+
+Expect:
+  type SomeDU =
+    | Type1 of string
+    | Type2 of string
 
