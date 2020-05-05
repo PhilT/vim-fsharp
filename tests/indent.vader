@@ -1,0 +1,7 @@
+Given fsharp:
+Do:
+  ilet func =\<CR>doSomething
+
+Expect:
+  let func =
+    doSomething
