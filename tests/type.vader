@@ -1,0 +1,14 @@
+Given fsharp:
+Do (A record type):
+  i
+  type SomeRecordType = {\<CR>
+  field1: string\<CR>
+  field2: int\<CR>
+  }
+
+Expect:
+  type SomeRecordType = {
+    field1: string
+    field2: int
+  }
+

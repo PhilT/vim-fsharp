@@ -1,0 +1,30 @@
+Given fsharp:
+Do:
+  i
+  module Example\<CR>
+  \<CR>
+  open Some.Other.Module\<CR>
+  \<CR>
+  let someFunc =\<CR>
+  doSomething
+
+Expect:
+  module Example
+
+  open Some.Other.Module
+
+  let someFunc =
+    doSomething
+
+Do:
+  i
+  module Example =\<CR>
+  let func =\<CR>
+  doSomething
+
+Expect:
+  module Example =
+    let func =
+      doSomething
+
+

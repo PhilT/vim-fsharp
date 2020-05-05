@@ -1,1 +1,1 @@
-autocmd BufNewFile,BufRead *.fs,*.fsx setfiletype fsharp
+autocmd BufNewFile,BufRead *.fs,*.fsx,*.fsi set filetype=fsharp

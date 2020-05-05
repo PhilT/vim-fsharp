@@ -1,0 +1,43 @@
+Given fsharp:
+Do:
+  i
+  let func =\<CR>
+  doSomething
+
+Expect:
+  let func =
+    doSomething
+
+Do (Multiline function):
+  i
+  let func =\<CR>
+  doSomething\<CR>
+  doAnotherThing
+
+Expect:
+  let func =
+    doSomething
+    doAnotherThing
+
+Given:
+  let func =
+    something
+
+    something
+
+Do (End function):
+  GA\<CR>
+  \<CR>
+  \<CR>
+  let anotherFunc =\<CR>
+  anotherThing
+
+Expect:
+  let func =
+    something
+
+    something
+
+
+  let anotherFunc =
+    anotherThing

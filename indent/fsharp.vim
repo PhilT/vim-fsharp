@@ -6,8 +6,6 @@
 "
 " Only load this indent file when no other was loaded.
 
-echom 'Load indent script'
-
 "if exists("b:did_indent")
 "  finish
 "endif
@@ -16,9 +14,10 @@ echom 'Load indent script'
 " let b:did_indent = 1
 
 setlocal indentexpr=FSharpIndent()
-setlocal indentkeys&
+"setlocal indentkeys&
 "setlocal indentkeys+=0=let,0=module
-setlocal indentkeys+=0\|,
+"setlocal indentkeys+=0=}
+"setlocal indentkeys=0|
 
 " Only define the function once
 "if exists("*GetFsharpIndent")
@@ -45,39 +44,47 @@ function! FSharpIndent()
   let width = shiftwidth()
   let indent = 0
 
-  echom 'Running indent script'
+  echom 'Detecting...'
 
-  " let func =
-  " module Module =
-  if previous_line =~ '^\(let\|module\).*=$'
-    echom 'let!'
-    let indent = previous_indent + width
+  echom 'Current line: '.current_line
 
-  " | match expr
-  "
-  elseif previous_line =~ '^| .*$'
-    if previous_line =~ '^.*->$'
-      let indent = previous_indent
-    else
-      let indent = previous_indent + width
-    endif
-
-  " when expr ->
-  elseif previous_line =~ '^when.*->$'
-    "if //find the line with the pipe
-    let indent = previous_indent + width
-
-  " |
-  elseif current_line =~ '^|$' && previous_line !~ '^match .* with'
+  if current_line =~ '^}$'
+    echom 'Detected: Dedent closing brackets: '.previous_indent
     let indent = previous_indent - width
-  else
-    let indent = previous_indent
-  endif
 
-  " Two blank lines for end of function (dedent)
-  if (previous_lnum + 3) == v:lnum
-    echo 'Matched: End of function'
+  elseif previous_line =~ '^\(let\|module\).*=$'
+    echom 'Detected: let/module ='
+    let indent = previous_indent + width
+
+  elseif previous_line =~ '^type.*= {$'
+    echom 'Detected: type'
+    let indent = previous_indent + width
+"  " | match expr
+"  "
+"  elseif previous_line =~ '^| .*$'
+"    echom 'Detected: match'
+"    let indent = previous_indent
+"    let indent += previous_line =~ '^.*->$' ? 0 : width
+"
+"  " when expr ->
+"  elseif previous_line =~ '^when.*->$'
+"    echom 'Detected: when'
+"    "if //find the line with the pipe
+"    let indent = previous_indent + width
+"
+"  " |
+"  elseif current_line =~ '^|$' && previous_line !~ '^match .* with'
+"    echom 'Detected: match'
+"    let indent = previous_indent - width
+"
+  elseif (previous_lnum + 3) <= v:lnum
+    echom 'Detected: Two blank lines for end of function'
+    let indent = previous_indent - width
+
+  else
+    echom 'Default: Keep indent of previous line'
     let indent = previous_indent
+
   endif
 
   return indent
