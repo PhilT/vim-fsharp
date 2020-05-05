@@ -1,0 +1,13 @@
+Given fsharp:
+Do (Multiline list):
+  i
+  let aList = [\<CR>
+  item1\<CR>
+  item2\<CR>
+  ]
+
+Expect:
+  let aList = [
+    item1
+    item2
+  ]

@@ -46,7 +46,7 @@ function! FSharpIndent()
 
   echom 'Detecting...'
 
-  if current_line =~ '^}$'
+  if current_line =~ '^}\|]$'
     echom 'Detected: Dedent closing brackets: '.previous_indent
     let indent = previous_indent - width
 
@@ -54,7 +54,7 @@ function! FSharpIndent()
     echom 'Detected: let/module ='
     let indent = previous_indent + width
 
-  elseif previous_line =~ '^\(let\|type\).*=\(\s{\)\?$'
+  elseif previous_line =~ '^\(let\|type\).*=\(\s\({\|[\)\)\?$'
     echom 'Detected: type'
     let indent = previous_indent + width
 
