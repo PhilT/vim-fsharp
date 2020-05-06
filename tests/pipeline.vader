@@ -1,22 +1,12 @@
 Given fsharp:
 Do:
   i
-  match something with\<CR>
-  | Some case ->\<CR>
-  doSomething\<CR>
-  \<CR>
-  \<CR>
   let func =\<CR>
   doSomething\<CR>
   |> doOtherThing\<CR>
   |> andSomethingElse
 
 Expect:
-  match something with
-  | Some case ->
-    doSomething
-
-
   let func =
     doSomething
     |> doOtherThing

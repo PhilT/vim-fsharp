@@ -27,7 +27,9 @@ function! TrimSpacesAndComments(line)
   return substitute(line, '\v^\s*(.{-})\s*$', '\1', '')
 endfunction
 
-function! ScopedFind(regex, regex2, start_line, scope)
+
+function! ScopedFind(regex, start_line, scope)
+  let func_def = '^\s*let .*=\s*$'
   let lnum = a:start_line
   let min_indent = a:scope - shiftwidth()
   let indent = min_indent
@@ -35,7 +37,7 @@ function! ScopedFind(regex, regex2, start_line, scope)
   let inComment = 0
 
   while inComment ||
-        \ (line !~ a:regex && line !~ a:regex2 && lnum >= 0 && indent >= min_indent)
+        \ (line !~ a:regex && line !~ func_def && lnum >= 0 && indent >= min_indent)
     echom 'lnum:'.lnum
     echom 'indent:'.indent
     echom 'min_indent:'.min_indent
@@ -53,7 +55,7 @@ function! ScopedFind(regex, regex2, start_line, scope)
   endwhile
 
   echom '**** ScopedFind: ['.line.']'
-  return line =~ a:regex || line =~ a:regex2 ? lnum : -1
+  return line =~ a:regex || line =~ func_def ? lnum : -1
 endfunction
 
 
@@ -78,7 +80,8 @@ function! FSharpIndent()
 
   elseif current_line =~ '^|$'
     echom 'Detected: start of match case or DU case'
-    let lnum = ScopedFind('^\s*\(type\|match\)', '^\s*let .*=$', v:lnum, current_indent)
+    let lnum = ScopedFind('^\s*\(type\|match\)', v:lnum, current_indent)
+
     if lnum == -1
       let indent = previous_line
     elseif getline(lnum) =~ '^\s*type'
