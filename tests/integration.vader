@@ -86,24 +86,23 @@ Do:
   value = toggle.ui\<CR>
   color = AppState.renderToggle Color.green Color.grey toggle\<CR>
   }\<CR>
-  )
-#  \<CR>
-#  \<CR>
-#  \<CR>
-#  let cubeCount (state: AppState) : Text =\<CR>
-#  {\<CR>
-#  value = sprintf "%d" state.model.Count\<CR>
-#  color = Color.white\<CR>
-#  }\<CR>
-#  \<CR>
-#  \<CR>
-#  // TODO: Move camera handling to separate module\<CR>
-#  let moveCamera moveFunc delta (scene, state) =\<CR>
-#  ({ scene with camera = moveFunc delta scene.camera }, state)\<CR>
-#  |> Cursor.show\<CR>
-#  \<CR>
-#  \<CR>
-#  let BinaryActions =\<CR>
+  )\<CR>
+  \<CR>
+  \<CR>
+  let cubeCount (state: AppState) : Text =\<CR>
+  {\<CR>
+  value = sprintf "%d" state.model.Count\<CR>
+  color = Color.white\<CR>
+  }\<CR>
+  \<CR>
+  \<CR>
+  // TODO: Move camera handling to separate module\<CR>
+  let moveCamera moveFunc delta (scene, state) =\<CR>
+  ({ scene with camera = moveFunc delta scene.camera }, state)\<CR>
+  |> Cursor.show\<CR>
+  \<CR>
+  \<CR>
+  let BinaryActions =
 #  [\<CR>
 #  "activeplane-move"\<CR>
 #  "cube-create"\<CR>
@@ -284,22 +283,22 @@ Expect:
         color = AppState.renderToggle Color.green Color.grey toggle
       }
     )
-#
-#
-#  let cubeCount (state: AppState) : Text =
-#    {
-#      value = sprintf "%d" state.model.Count
-#      color = Color.white
-#    }
-#
-#
-#  // TODO: Move camera handling to separate module
-#  let moveCamera moveFunc delta (scene, state) =
-#    ({ scene with camera = moveFunc delta scene.camera }, state)
-#    |> Cursor.show
-#
-#
-#  let BinaryActions =
+
+
+  let cubeCount (state: AppState) : Text =
+    {
+      value = sprintf "%d" state.model.Count
+      color = Color.white
+    }
+
+
+  // TODO: Move camera handling to separate module
+  let moveCamera moveFunc delta (scene, state) =
+    ({ scene with camera = moveFunc delta scene.camera }, state)
+    |> Cursor.show
+
+
+  let BinaryActions =
 #    [
 #      "activeplane-move"
 #      "cube-create"
