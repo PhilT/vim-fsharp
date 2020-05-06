@@ -25,3 +25,22 @@ Expect:
   | Fire ->
     Action.fire
 
+Do (Action on separate line with predicates):
+  i
+  match event with\<CR>
+  | Move(Left)\<CR>
+  when something = true ->\<CR>
+  Action.move("left")\<CR>
+  | Fire\<CR>
+  when something = true ->\<CR>
+  Action.fire
+
+Expect:
+  match event with
+  | Move(Left)
+    when something = true ->
+    Action.move("left")
+  | Fire
+    when something = true ->
+    Action.fire
+

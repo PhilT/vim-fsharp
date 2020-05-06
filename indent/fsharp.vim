@@ -18,7 +18,7 @@ setlocal indentexpr=FSharpIndent()
 "setlocal indentkeys+=0=let,0=module
 "setlocal indentkeys+=0=}
 "setlocal indentkeys=0|
-setlocal indentkeys+=0=\|,0=\|]
+setlocal indentkeys+=0=\|,0=\|],0=when
 
 " Only define the function once
 "if exists("*GetFsharpIndent")
@@ -30,13 +30,13 @@ function! TrimSpaces(line)
   return substitute(a:line, '\v^\s*(.{-})\s*$', '\1', '')
 endfunction
 
-function! ScopedFind(regex, start_line, scope)
+function! ScopedFind(regex, regex2, start_line, scope)
   let lnum = a:start_line
   let min_indent = a:scope - shiftwidth()
   let indent = min_indent
   let line = ""
 
-  while line !~ a:regex && lnum >= 0 && indent >= min_indent
+  while line !~ a:regex && line !~ a:regex2 && lnum >= 0 && indent >= min_indent
     echom 'lnum:'.lnum
     echom 'indent:'.indent
     echom 'min_indent:'.min_indent
@@ -45,19 +45,12 @@ function! ScopedFind(regex, start_line, scope)
     let indent = indent(lnum)
   endwhile
 
-  let indent += line =~ '^\s*type' ? shiftwidth() : 0
-
   echom '**** ScopedFind: ['.line.']'
-  return line =~ a:regex ? indent : a:scope
+  return line =~ a:regex || line =~ a:regex2 ? lnum : -1
 endfunction
 
 
 function! FSharpIndent()
-	" Line 0 always goes at column 0
-	if v:lnum == 0
-		return 0
-	endif
-
 	let current_line = TrimSpaces(getline(v:lnum))
   let current_indent = indent(v:lnum)
   let previous_lnum = prevnonblank(v:lnum - 1)
@@ -68,13 +61,33 @@ function! FSharpIndent()
 
   echom 'Detecting...'
 
-  if current_line =~ '^}\|]\||]\|)$'
+	if v:lnum == 0
+    echom 'Detected: At line 0. Setting indent to 0'
+    let indent = 0
+
+  elseif current_line =~ '^}\|]\||]\|)$'
     echom 'Detected: Dedent closing brackets: '.previous_indent
     let indent = previous_indent - width
 
   elseif current_line =~ '^|$'
     echom 'Detected: start of match case or DU case'
-    let indent = ScopedFind('^\s*\(type\|match\)', v:lnum, current_indent)
+    let lnum = ScopedFind('^\s*\(type\|match\)', '^\s*let .*=$', v:lnum, current_indent)
+    echom 'ScopedFind returned: '.lnum
+    if lnum == -1
+      let indent = previous_line
+    elseif getline(lnum) =~ '^\s*type'
+      let indent = indent(lnum) + width
+      echom 'Matched DU type. Setting indent: '.indent
+    elseif getline(lnum) =~ '^\s*match'
+      let indent = indent(lnum)
+    elseif getline(lnum) =~ '^\s*let'
+      let indent = current_indent
+    else
+      throw 'Unhandled case "'.getline(lnum).'" in ScopedFind()'
+    endif
+
+  elseif current_line =~ '^when$'
+    let indent = previous_indent + width
 
   elseif previous_line =~ '^\(let\|module\).*=$'
     echom 'Detected: let/module ='
