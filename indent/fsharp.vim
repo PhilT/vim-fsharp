@@ -81,18 +81,17 @@ function! FSharpIndent()
   elseif current_line =~ '^|$'
     echom 'Detected: start of match case or DU case'
     let lnum = ScopedFind('^\s*\(type\|match\)', v:lnum, current_indent)
+    let line = lnum == -1 ? "" : getline(lnum)
 
-    if lnum == -1
-      let indent = previous_line
-    elseif getline(lnum) =~ '^\s*type'
+    if line =~ '^\s*type'
       let indent = indent(lnum) + width
-    elseif getline(lnum) =~ '^\s*match'
+    elseif line =~ '^\s*match'
       let indent = indent(lnum)
       let indent -= previous_line =~ '^| _ ->' ? width : 0
-    elseif getline(lnum) =~ '^\s*let'
+    elseif line =~ '^\s*let'
       let indent = current_indent
     else
-      throw 'Unhandled case "'.getline(lnum).'" in ScopedFind()'
+      let indent = previous_line
     endif
 
   elseif current_line =~ '^when$'
@@ -109,7 +108,7 @@ function! FSharpIndent()
     echom 'Detected: type/record/array/list'
     let indent = previous_indent + width
 
-  elseif previous_line =~ '^[\|[|\|{$'
+  elseif previous_line =~ '^\([\|[|\|{\|[{\)$'
     echom 'Detected: list/record'
     let indent = previous_indent + width
 
@@ -123,7 +122,27 @@ function! FSharpIndent()
 
   elseif (previous_lnum + 3) <= v:lnum
     echom 'Detected: Two blank lines for end of function'
-    let indent = previous_indent - width
+    let lnum = ScopedFind('^\s*let .*=\s*$', v:lnum, current_indent)
+    let line = lnum == -1 ? "" : getline(lnum)
+
+    if line =~ '^\s*let'
+      let indent = indent(lnum)
+    else
+      throw 'Unable to find previously defined function'
+    endif
+
+  elseif (previous_lnum + 2) <= v:lnum
+    echom 'Detected: Two blank lines for end of code block'
+    let lnum = ScopedFind('^\s*\(if .* then\)$', v:lnum, current_indent)
+    let line = lnum == -1 ? "" : getline(lnum)
+
+    if line =~ '^\s*\(if .* then\)$'
+      let indent = indent(lnum)
+    elseif line =~ '^\s*let'
+      let indent = current_indent
+    else
+      let indent = previous_line
+    endif
 
   elseif previous_line =~ '^\(if\|elif\) .* then$'
         \ || previous_line =~ '^else$'

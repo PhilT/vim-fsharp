@@ -1,5 +1,5 @@
 Given fsharp:
-Do:
+Do (if/elif/else block):
   i
   if someExpression then\<CR>
   doSomething\<CR>
@@ -15,3 +15,27 @@ Expect:
     doAnotherThing
   else
     doSomethingElse
+
+Given fsharp:
+  if someExpression then
+    doSomething
+  elif someOtherExpression then
+    doAnotherThing
+  else
+    doSomethingElse
+
+Do (dedents after blank line):
+  Go
+  \<CR>
+  some other code
+
+Expect:
+  if someExpression then
+    doSomething
+  elif someOtherExpression then
+    doAnotherThing
+  else
+    doSomethingElse
+
+  some other code
+

@@ -64,29 +64,29 @@ Do:
   Action.storeKey "pan-backward" { x = 0.0f; y = -1.0f } pressed state\<CR>
   | Key.D -> Action.storeKey "pan-right" { x = 1.0f; y = 0.0f } pressed state\<CR>
   | _ -> state\<CR>
-  | _ -> state
-#  \<CR>
-#  \<CR>
-#  let createMessages (scene, state) : list<Text> =\<CR>
-#  if DateTime.Now < state.removeMessageAt then\<CR>
-#  [{\<CR>
-#  value = state.messages\<CR>
-#  size = FontSize.S\<CR>
-#  color = Color.white\<CR>
-#  }]\<CR>
-#  else\<CR>
-#  []\<CR>
-#  \<CR>
-#  \<CR>
-#  let toggles state : list<Text> =\<CR>
-#  state.toggles\<CR>
-#  |> MapUtil.valuesAsList\<CR>
-#  |> List.mapi (fun i toggle ->\<CR>
-#  {\<CR>
-#  value = toggle.ui\<CR>
-#  color = AppState.renderToggle Color.green Color.grey toggle\<CR>
-#  }\<CR>
-#  )\<CR>
+  | _ -> state\<CR>
+  \<CR>
+  \<CR>
+  let createMessages (scene, state) : list<Text> =\<CR>
+  if DateTime.Now < state.removeMessageAt then\<CR>
+  [{\<CR>
+  value = state.messages\<CR>
+  size = FontSize.S\<CR>
+  color = Color.white\<CR>
+  }]\<CR>
+  else\<CR>
+  []\<CR>
+  \<CR>
+  \<CR>
+  let toggles state : list<Text> =\<CR>
+  state.toggles\<CR>
+  |> MapUtil.valuesAsList\<CR>
+  |> List.mapi (fun i toggle ->\<CR>
+  {\<CR>
+  value = toggle.ui\<CR>
+  color = AppState.renderToggle Color.green Color.grey toggle\<CR>
+  }\<CR>
+  )
 #  \<CR>
 #  \<CR>
 #  \<CR>
@@ -262,29 +262,28 @@ Expect:
       | Key.D -> Action.storeKey "pan-right" { x = 1.0f; y = 0.0f } pressed state
       | _ -> state
     | _ -> state
-#
-#
-#  let createMessages (scene, state) : list<Text> =
-#    if DateTime.Now < state.removeMessageAt then
-#      [{
-#        value = state.messages
-#        size = FontSize.S
-#        color = Color.white
-#      }]
-#    else
-#      []
-#
-#
-#  let toggles state : list<Text> =
-#    state.toggles
-#    |> MapUtil.valuesAsList
-#    |> List.mapi (fun i toggle ->
-#      {
-#        value = toggle.ui
-#        color = AppState.renderToggle Color.green Color.grey toggle
-#      }
-#    )
-#
+
+
+  let createMessages (scene, state) : list<Text> =
+    if DateTime.Now < state.removeMessageAt then
+      [{
+        value = state.messages
+        size = FontSize.S
+        color = Color.white
+      }]
+    else
+      []
+
+
+  let toggles state : list<Text> =
+    state.toggles
+    |> MapUtil.valuesAsList
+    |> List.mapi (fun i toggle ->
+      {
+        value = toggle.ui
+        color = AppState.renderToggle Color.green Color.grey toggle
+      }
+    )
 #
 #
 #  let cubeCount (state: AppState) : Text =

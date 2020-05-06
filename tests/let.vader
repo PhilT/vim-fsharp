@@ -19,14 +19,14 @@ Expect:
     doSomething
     doAnotherThing
 
-Given:
+Given fsharp:
   let func =
     something
 
     something
 
 Do (End function):
-  GA\<CR>
+  Go
   \<CR>
   \<CR>
   let anotherFunc =\<CR>
@@ -41,3 +41,31 @@ Expect:
 
   let anotherFunc =
     anotherThing
+
+Given fsharp:
+  let func =
+    something
+    if someCondition then
+      doStuff
+    else
+      doOtherStuff
+
+Do (End function when double indented):
+  Go
+  \<CR>
+  \<CR>
+  let anotherFunc =\<CR>
+  anotherThing
+
+Expect:
+  let func =
+    something
+    if someCondition then
+      doStuff
+    else
+      doOtherStuff
+
+
+  let anotherFunc =
+    anotherThing
+
