@@ -44,3 +44,25 @@ Expect:
     when something = true ->
     Action.fire
 
+Do (Nested match expressions):
+  i
+  match event with\<CR>
+  | match case 1 ->\<CR>
+  doingIt\<CR>
+  | case 2 ->\<CR>
+  match nested with\<CR>
+  | nested case 1 ->\<CR>
+  nestedDoingIt\<CR>
+  | _ -> nestedCatchAll\<CR>
+  | _ -> outerCatchAll
+
+Expect:
+  match event with
+  | match case 1 ->
+    doingIt
+  | case 2 ->
+    match nested with
+    | nested case 1 ->
+      nestedDoingIt
+    | _ -> nestedCatchAll
+  | _ -> outerCatchAll

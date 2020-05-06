@@ -14,10 +14,6 @@
 " let b:did_indent = 1
 
 setlocal indentexpr=FSharpIndent()
-"setlocal indentkeys&
-"setlocal indentkeys+=0=let,0=module
-"setlocal indentkeys+=0=}
-"setlocal indentkeys=0|
 setlocal indentkeys+=0=\|,0=\|],0=when
 
 " Only define the function once
@@ -26,8 +22,9 @@ setlocal indentkeys+=0=\|,0=\|],0=when
 "endif
 "
 
-function! TrimSpaces(line)
-  return substitute(a:line, '\v^\s*(.{-})\s*$', '\1', '')
+function! TrimSpacesAndComments(line)
+  let line = substitute(a:line, '\v(.*)\/\/.*', '\1', '')
+  return substitute(line, '\v^\s*(.{-})\s*$', '\1', '')
 endfunction
 
 function! ScopedFind(regex, regex2, start_line, scope)
@@ -35,14 +32,24 @@ function! ScopedFind(regex, regex2, start_line, scope)
   let min_indent = a:scope - shiftwidth()
   let indent = min_indent
   let line = ""
+  let inComment = 0
 
-  while line !~ a:regex && line !~ a:regex2 && lnum >= 0 && indent >= min_indent
+  while inComment ||
+        \ (line !~ a:regex && line !~ a:regex2 && lnum >= 0 && indent >= min_indent)
     echom 'lnum:'.lnum
     echom 'indent:'.indent
     echom 'min_indent:'.min_indent
     let lnum -= 1
     let line = getline(lnum)
     let indent = indent(lnum)
+
+    " Indicate if we are in a multiline comment
+    if line =~ '*)$'
+      let inComment = 1
+    endif
+    if line =~ '^\s*(*'
+      let inComment = 0
+    endif
   endwhile
 
   echom '**** ScopedFind: ['.line.']'
@@ -51,11 +58,11 @@ endfunction
 
 
 function! FSharpIndent()
-	let current_line = TrimSpaces(getline(v:lnum))
+	let current_line = TrimSpacesAndComments(getline(v:lnum))
   let current_indent = indent(v:lnum)
   let previous_lnum = prevnonblank(v:lnum - 1)
   let previous_indent = indent(previous_lnum)
-  let previous_line = TrimSpaces(getline(previous_lnum))
+  let previous_line = TrimSpacesAndComments(getline(previous_lnum))
   let width = shiftwidth()
   let indent = 0
 
@@ -72,14 +79,13 @@ function! FSharpIndent()
   elseif current_line =~ '^|$'
     echom 'Detected: start of match case or DU case'
     let lnum = ScopedFind('^\s*\(type\|match\)', '^\s*let .*=$', v:lnum, current_indent)
-    echom 'ScopedFind returned: '.lnum
     if lnum == -1
       let indent = previous_line
     elseif getline(lnum) =~ '^\s*type'
       let indent = indent(lnum) + width
-      echom 'Matched DU type. Setting indent: '.indent
     elseif getline(lnum) =~ '^\s*match'
       let indent = indent(lnum)
+      let indent -= previous_line =~ '^| _ ->' ? width : 0
     elseif getline(lnum) =~ '^\s*let'
       let indent = current_indent
     else
@@ -108,7 +114,7 @@ function! FSharpIndent()
   elseif previous_line =~ '^| .*->$'
     echom 'Detected: single line match case'
     let indent = previous_indent + width
-"
+
   elseif (previous_lnum + 3) <= v:lnum
     echom 'Detected: Two blank lines for end of function'
     let indent = previous_indent - width

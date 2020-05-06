@@ -36,36 +36,35 @@ Do:
   let processInput evt state =\<CR>
   let scene, _state = state\<CR>
   \<CR>
-  match evt with
-#  | Move(position)\<CR>
-#  when Context.palette position state ->\<CR>
-#  Action.store "cursor-hide" position state\<CR>
-#  | Drag(Left, delta)\<CR>
-#  when Context.moving delta state ->\<CR>
-#  Action.store "cube-create" delta state\<CR>
-#  | Drag(Right, delta) -> Action.store "rotate" delta state\<CR>
-#  | Key(Key.ControlLeft, true) ->\<CR>
-#  Action.storeKey "control" { x = 1.0f; y = 1.0f } true state\<CR>
-#  | Key(Key.ControlRight, false)\<CR>
-#  | Key(Key.ControlLeft, false) ->\<CR>
-#  Action.remove "control" state\<CR>
-#  | Key(Key.X, false) -> Action.storeKey "cube-destroy-end" Point.origin true state\<CR>
-#  | Key(key, pressed) ->\<CR>
-#  match key with\<CR>
-#  | Key.S when Action.contains "control" state && pressed ->\<CR>
-#  Action.storeKey "save" { x = 0.0f; y = 1.0f } pressed state\<CR>
-#  | Key.Down when pressed ->\<CR>
-#  Action.storeKey "activeplane-move" { x = 0.0f; y = -1.0f } pressed state\<CR>
-#  \<CR>
-#  // action-direction (e.g. zoom-in or pitch-up) should be types containing\<CR>
-#  // the deltas rather than strings\<CR>
-#  | Key.Q -> Action.storeKey "zoom-in" { x = 0.0f; y = -1.0f } pressed state\<CR>
-#  | Key.A -> Action.storeKey "pan-left" { x = -1.0f; y = 0.0f } pressed state\<CR>
-#  | Key.S when not (Action.contains "control" state) ->  // FIXME: This won't scale\<CR>
-#  Action.storeKey "pan-backward" { x = 0.0f; y = -1.0f } pressed state\<CR>
-#  | Key.D -> Action.storeKey "pan-right" { x = 1.0f; y = 0.0f } pressed state\<CR>
-#  | _ -> state\<CR>
-#  | _ -> state\<CR>
+  match evt with\<CR>
+  | Move(position)\<CR>
+  when Context.palette position state ->\<CR>
+  Action.store "cursor-hide" position state\<CR>
+  | Drag(Left, delta)\<CR>
+  when Context.moving delta state ->\<CR>
+  Action.store "cube-create" delta state\<CR>
+  | Drag(Right, delta) -> Action.store "rotate" delta state\<CR>
+  | Key(Key.ControlLeft, true) ->\<CR>
+  Action.storeKey "control" { x = 1.0f; y = 1.0f } true state\<CR>
+  | Key(Key.ControlRight, false)\<CR>
+  | Key(Key.ControlLeft, false) ->\<CR>
+  Action.remove "control" state\<CR>
+  | Key(Key.X, false) -> Action.storeKey "cube-destroy-end" Point.origin true state\<CR>
+  | Key(key, pressed) ->\<CR>
+  match key with\<CR>
+  | Key.S when Action.contains "control" state && pressed ->\<CR>
+  Action.storeKey "save" { x = 0.0f; y = 1.0f } pressed state\<CR>
+  | Key.Down when pressed ->\<CR>
+  Action.storeKey "activeplane-move" { x = 0.0f; y = -1.0f } pressed state\<CR>
+  // action-direction (e.g. zoom-in or pitch-up) should be types containing\<CR>
+  // the deltas rather than strings\<CR>
+  | Key.Q -> Action.storeKey "zoom-in" { x = 0.0f; y = -1.0f } pressed state\<CR>
+  | Key.A -> Action.storeKey "pan-left" { x = -1.0f; y = 0.0f } pressed state\<CR>
+  | Key.S when not (Action.contains "control" state) ->  // FIXME: This won't scale\<CR>
+  Action.storeKey "pan-backward" { x = 0.0f; y = -1.0f } pressed state\<CR>
+  | Key.D -> Action.storeKey "pan-right" { x = 1.0f; y = 0.0f } pressed state\<CR>
+  | _ -> state\<CR>
+  | _ -> state
 #  \<CR>
 #  \<CR>
 #  let createMessages (scene, state) : list<Text> =\<CR>
@@ -235,35 +234,34 @@ Expect:
     let scene, _state = state
 
     match evt with
-#    | Move(position)
-#      when Context.palette position state ->
-#      Action.store "cursor-hide" position state
-#    | Drag(Left, delta)
-#      when Context.moving delta state ->
-#      Action.store "cube-create" delta state
-#    | Drag(Right, delta) -> Action.store "rotate" delta state
-#    | Key(Key.ControlLeft, true) ->
-#      Action.storeKey "control" { x = 1.0f; y = 1.0f } true state
-#    | Key(Key.ControlRight, false)
-#    | Key(Key.ControlLeft, false) ->
-#      Action.remove "control" state
-#    | Key(Key.X, false) -> Action.storeKey "cube-destroy-end" Point.origin true state
-#    | Key(key, pressed) ->
-#      match key with
-#      | Key.S when Action.contains "control" state && pressed ->
-#        Action.storeKey "save" { x = 0.0f; y = 1.0f } pressed state
-#      | Key.Down when pressed ->
-#        Action.storeKey "activeplane-move" { x = 0.0f; y = -1.0f } pressed state
-#
-#      // action-direction (e.g. zoom-in or pitch-up) should be types containing
-#      // the deltas rather than strings
-#      | Key.Q -> Action.storeKey "zoom-in" { x = 0.0f; y = -1.0f } pressed state
-#      | Key.A -> Action.storeKey "pan-left" { x = -1.0f; y = 0.0f } pressed state
-#      | Key.S when not (Action.contains "control" state) ->  // FIXME: This won't scale
-#        Action.storeKey "pan-backward" { x = 0.0f; y = -1.0f } pressed state
-#      | Key.D -> Action.storeKey "pan-right" { x = 1.0f; y = 0.0f } pressed state
-#      | _ -> state
-#    | _ -> state
+    | Move(position)
+      when Context.palette position state ->
+      Action.store "cursor-hide" position state
+    | Drag(Left, delta)
+      when Context.moving delta state ->
+      Action.store "cube-create" delta state
+    | Drag(Right, delta) -> Action.store "rotate" delta state
+    | Key(Key.ControlLeft, true) ->
+      Action.storeKey "control" { x = 1.0f; y = 1.0f } true state
+    | Key(Key.ControlRight, false)
+    | Key(Key.ControlLeft, false) ->
+      Action.remove "control" state
+    | Key(Key.X, false) -> Action.storeKey "cube-destroy-end" Point.origin true state
+    | Key(key, pressed) ->
+      match key with
+      | Key.S when Action.contains "control" state && pressed ->
+        Action.storeKey "save" { x = 0.0f; y = 1.0f } pressed state
+      | Key.Down when pressed ->
+        Action.storeKey "activeplane-move" { x = 0.0f; y = -1.0f } pressed state
+        // action-direction (e.g. zoom-in or pitch-up) should be types containing
+        // the deltas rather than strings
+      | Key.Q -> Action.storeKey "zoom-in" { x = 0.0f; y = -1.0f } pressed state
+      | Key.A -> Action.storeKey "pan-left" { x = -1.0f; y = 0.0f } pressed state
+      | Key.S when not (Action.contains "control" state) ->  // FIXME: This won't scale
+        Action.storeKey "pan-backward" { x = 0.0f; y = -1.0f } pressed state
+      | Key.D -> Action.storeKey "pan-right" { x = 1.0f; y = 0.0f } pressed state
+      | _ -> state
+    | _ -> state
 #
 #
 #  let createMessages (scene, state) : list<Text> =

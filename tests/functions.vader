@@ -13,3 +13,14 @@ Do:
 Execute (ScopedFind):
   let actual = ScopedFind('^\s*match', '^\s*let .*=$', line('$'), indent(line('$')))
   AssertEqual 2, actual
+
+Given fsharp:
+
+Do:
+  Go\<Esc>
+
+Execute (TrimSpacesAndComments):
+  let line = '  let someFunc = // This should be ignored'
+  let actual = TrimSpacesAndComments(line)
+  AssertEqual 'let someFunc =', actual
+
