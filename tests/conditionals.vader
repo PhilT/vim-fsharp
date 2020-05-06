@@ -1,0 +1,17 @@
+Given fsharp:
+Do:
+  i
+  if someExpression then\<CR>
+  doSomething\<CR>
+  elif someOtherExpression then\<CR>
+  doAnotherThing\<CR>
+  else\<CR>
+  doSomethingElse
+
+Expect:
+  if someExpression then
+    doSomething
+  elif someOtherExpression then
+    doAnotherThing
+  else
+    doSomethingElse

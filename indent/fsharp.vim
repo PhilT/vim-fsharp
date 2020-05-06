@@ -14,7 +14,7 @@
 " let b:did_indent = 1
 
 setlocal indentexpr=FSharpIndent()
-setlocal indentkeys+=0=\|,0=\|],0=when
+setlocal indentkeys+=0=\|,0=\|],0=when,0=elif,0=else
 
 " Only define the function once
 "if exists("*GetFsharpIndent")
@@ -95,6 +95,9 @@ function! FSharpIndent()
   elseif current_line =~ '^when$'
     let indent = previous_indent + width
 
+  elseif current_line =~ '^\(elif\|else\)$'
+    let indent = previous_indent - width
+
   elseif previous_line =~ '^\(let\|module\).*=$'
     echom 'Detected: let/module ='
     let indent = previous_indent + width
@@ -118,6 +121,11 @@ function! FSharpIndent()
   elseif (previous_lnum + 3) <= v:lnum
     echom 'Detected: Two blank lines for end of function'
     let indent = previous_indent - width
+
+  elseif previous_line =~ '^\(if\|elif\) .* then$'
+        \ || previous_line =~ '^else$'
+    echom 'Detected: if/elif then'
+    let indent = previous_indent + width
 
   else
     echom 'Default: Keep indent of previous line'
