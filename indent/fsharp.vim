@@ -18,7 +18,7 @@ setlocal indentexpr=FSharpIndent()
 "setlocal indentkeys+=0=let,0=module
 "setlocal indentkeys+=0=}
 "setlocal indentkeys=0|
-setlocal indentkeys+=0=\|]
+setlocal indentkeys+=0=\|,0=\|]
 
 " Only define the function once
 "if exists("*GetFsharpIndent")
@@ -28,6 +28,27 @@ setlocal indentkeys+=0=\|]
 
 function! TrimSpaces(line)
   return substitute(a:line, '\v^\s*(.{-})\s*$', '\1', '')
+endfunction
+
+function! ScopedFind(regex, start_line, scope)
+  let lnum = a:start_line
+  let min_indent = a:scope - shiftwidth()
+  let indent = min_indent
+  let line = ""
+
+  while line !~ a:regex && lnum >= 0 && indent >= min_indent
+    echom 'lnum:'.lnum
+    echom 'indent:'.indent
+    echom 'min_indent:'.min_indent
+    let lnum -= 1
+    let line = getline(lnum)
+    let indent = indent(lnum)
+  endwhile
+
+  let indent += line =~ '^\s*type' ? shiftwidth() : 0
+
+  echom '**** ScopedFind: ['.line.']'
+  return line =~ a:regex ? indent : a:scope
 endfunction
 
 
@@ -47,9 +68,13 @@ function! FSharpIndent()
 
   echom 'Detecting...'
 
-  if current_line =~ '^}\|]\||]$'
+  if current_line =~ '^}\|]\||]\|)$'
     echom 'Detected: Dedent closing brackets: '.previous_indent
     let indent = previous_indent - width
+
+  elseif current_line =~ '^|$'
+    echom 'Detected: start of match case or DU case'
+    let indent = ScopedFind('^\s*\(type\|match\)', v:lnum, current_indent)
 
   elseif previous_line =~ '^\(let\|module\).*=$'
     echom 'Detected: let/module ='
@@ -59,25 +84,17 @@ function! FSharpIndent()
     echom 'Detected: type/record/array/list'
     let indent = previous_indent + width
 
-  elseif previous_line =~ '^[\|[|$'
-    echom 'Detected: list'
+  elseif previous_line =~ '^[\|[|\|{$'
+    echom 'Detected: list/record'
     let indent = previous_indent + width
 
-"  elseif previous_line =~ '^| .*$'
-"    echom 'Detected: match'
-"    let indent = previous_indent
-"    let indent += previous_line =~ '^.*->$' ? 0 : width
-"
-"  " when expr ->
-"  elseif previous_line =~ '^when.*->$'
-"    echom 'Detected: when'
-"    "if //find the line with the pipe
-"    let indent = previous_indent + width
-"
-"  " |
-"  elseif current_line =~ '^|$' && previous_line !~ '^match .* with'
-"    echom 'Detected: match'
-"    let indent = previous_indent - width
+  elseif previous_line =~ '(fun\s.*->$'
+    echom 'Detected: lambda'
+    let indent = previous_indent + width
+
+  elseif previous_line =~ '^| .*->$'
+    echom 'Detected: single line match case'
+    let indent = previous_indent + width
 "
   elseif (previous_lnum + 3) <= v:lnum
     echom 'Detected: Two blank lines for end of function'

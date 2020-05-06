@@ -1,0 +1,14 @@
+Given fsharp:
+Do:
+  i
+  let func =\<CR>
+  doSomething\<CR>
+  |> doOtherThing\<CR>
+  |> andSomethingElse
+
+Expect:
+  let func =
+    doSomething
+    |> doOtherThing
+    |> andSomethingElse
+

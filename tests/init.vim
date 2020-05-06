@@ -5,4 +5,6 @@ let &rtp.=','.expand('%:p:h:h')
 filetype plugin indent on
 set shiftwidth=2
 syntax enable
-
+set nomore
+set noswapfile
+set viminfo=

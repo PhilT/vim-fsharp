@@ -1,0 +1,28 @@
+Given fsharp:
+Do:
+  i
+  List.mapi (fun i j ->\<CR>
+  i, j\<CR>
+  )
+
+Expect:
+  List.mapi (fun i j ->
+    i, j
+  )
+
+Do:
+  i
+  List.mapi (fun i j ->\<CR>
+  {\<CR>
+  value = i\<CR>
+  thing = j\<CR>
+  }\<CR>
+  )
+
+Expect:
+  List.mapi (fun i j ->
+    {
+      value = i
+      thing = j
+    }
+  )

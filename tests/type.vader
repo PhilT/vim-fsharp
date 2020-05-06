@@ -25,6 +25,19 @@ Expect:
     field2 = 1
   }
 
+Do (Returning a Record):
+  i
+  let someFunc () =\<CR>
+  {\<CR>
+  field1 = "thing"\<CR>
+  }
+
+Expect:
+  let someFunc () =
+    {
+      field1 = "thing"
+    }
+
 Do (Discriminated Union):
   i
   type SomeDU =\<CR>

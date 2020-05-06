@@ -1,0 +1,15 @@
+Given fsharp:
+  let func =
+    match something with
+    | First case -> something
+    | Second case ->
+      doSomething
+    | Third case ->
+      doOtherThing
+
+Do:
+  Go|
+
+Execute (ScopedFind):
+  let actual = ScopedFind('^\s*match', line('$'), indent(line('$')))
+  AssertEqual 2, actual

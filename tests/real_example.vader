@@ -1,0 +1,401 @@
+# Example taken from real code. Shortened to simpify
+
+Given fsharp:
+Do:
+  i
+  module Matter.Builder\<CR>
+  \<CR>
+  open Silk.NET.Input.Common\<CR>
+  open System.IO\<CR>
+  \<CR>
+  open Matter\<CR>
+  \<CR>
+  // TODO: Move camera handling to separate module\<CR>
+  let setCamera func delta (scene, state) =\<CR>
+  { scene with camera = func delta scene.camera }, state\<CR>
+  \<CR>
+  \<CR>
+  let zoomCamera delta state = setCamera Camera.zoom delta state\<CR>
+  let rotateCamera delta state = setCamera Camera.rotate delta state\<CR>
+  \<CR>
+  \<CR>
+  let init modelPath palette : Scene -> (Scene * AppState) =\<CR>
+  (fun scene ->\<CR>
+  ( scene, AppState.initial modelPath palette )\<CR>
+  |> Model.load\<CR>
+  )\<CR>
+  \<CR>
+  \<CR>
+  (*\<CR>
+  TODO: These mappings need to eventually go into a config file so we need\<CR>
+  a simpler way to build them. The conditional stuff needs to come out and\<CR>
+  be replaced with more config, or context?! Of course!\<CR>
+  *)\<CR>
+  \<CR>
+  // TODO: Move camera handling to separate module\<CR>
+  let processInput evt state =\<CR>
+  let scene, _state = state\<CR>
+  \<CR>
+  match evt with
+#  | Move(position)\<CR>
+#  when Context.palette position state ->\<CR>
+#  Action.store "cursor-hide" position state\<CR>
+#  | Drag(Left, delta)\<CR>
+#  when Context.moving delta state ->\<CR>
+#  Action.store "cube-create" delta state\<CR>
+#  | Drag(Right, delta) -> Action.store "rotate" delta state\<CR>
+#  | Key(Key.ControlLeft, true) ->\<CR>
+#  Action.storeKey "control" { x = 1.0f; y = 1.0f } true state\<CR>
+#  | Key(Key.ControlRight, false)\<CR>
+#  | Key(Key.ControlLeft, false) ->\<CR>
+#  Action.remove "control" state\<CR>
+#  | Key(Key.X, false) -> Action.storeKey "cube-destroy-end" Point.origin true state\<CR>
+#  | Key(key, pressed) ->\<CR>
+#  match key with\<CR>
+#  | Key.S when Action.contains "control" state && pressed ->\<CR>
+#  Action.storeKey "save" { x = 0.0f; y = 1.0f } pressed state\<CR>
+#  | Key.Down when pressed ->\<CR>
+#  Action.storeKey "activeplane-move" { x = 0.0f; y = -1.0f } pressed state\<CR>
+#  \<CR>
+#  // action-direction (e.g. zoom-in or pitch-up) should be types containing\<CR>
+#  // the deltas rather than strings\<CR>
+#  | Key.Q -> Action.storeKey "zoom-in" { x = 0.0f; y = -1.0f } pressed state\<CR>
+#  | Key.A -> Action.storeKey "pan-left" { x = -1.0f; y = 0.0f } pressed state\<CR>
+#  | Key.S when not (Action.contains "control" state) ->  // FIXME: This won't scale\<CR>
+#  Action.storeKey "pan-backward" { x = 0.0f; y = -1.0f } pressed state\<CR>
+#  | Key.D -> Action.storeKey "pan-right" { x = 1.0f; y = 0.0f } pressed state\<CR>
+#  | _ -> state\<CR>
+#  | _ -> state\<CR>
+#  \<CR>
+#  \<CR>
+#  let createMessages (scene, state) : list<Text> =\<CR>
+#  if DateTime.Now < state.removeMessageAt then\<CR>
+#  [{\<CR>
+#  value = state.messages\<CR>
+#  size = FontSize.S\<CR>
+#  color = Color.white\<CR>
+#  }]\<CR>
+#  else\<CR>
+#  []\<CR>
+#  \<CR>
+#  \<CR>
+#  let toggles state : list<Text> =\<CR>
+#  state.toggles\<CR>
+#  |> MapUtil.valuesAsList\<CR>
+#  |> List.mapi (fun i toggle ->\<CR>
+#  {\<CR>
+#  value = toggle.ui\<CR>
+#  color = AppState.renderToggle Color.green Color.grey toggle\<CR>
+#  }\<CR>
+#  )\<CR>
+#  \<CR>
+#  \<CR>
+#  \<CR>
+#  let cubeCount (state: AppState) : Text =\<CR>
+#  {\<CR>
+#  value = sprintf "%d" state.model.Count\<CR>
+#  color = Color.white\<CR>
+#  }\<CR>
+#  \<CR>
+#  \<CR>
+#  // TODO: Move camera handling to separate module\<CR>
+#  let moveCamera moveFunc delta (scene, state) =\<CR>
+#  ({ scene with camera = moveFunc delta scene.camera }, state)\<CR>
+#  |> Cursor.show\<CR>
+#  \<CR>
+#  \<CR>
+#  let BinaryActions =\<CR>
+#  [\<CR>
+#  "activeplane-move"\<CR>
+#  "cube-create"\<CR>
+#  "cube-destroy-end"\<CR>
+#  "fill-start"\<CR>
+#  ]\<CR>
+#  \<CR>
+#  \<CR>
+#  let isBinaryAction action =\<CR>
+#  List.contains action BinaryActions\<CR>
+#  \<CR>
+#  \<CR>
+#  //TODO: Move camera handling to engine or at least a separate module\<CR>
+#  let processActions state =\<CR>
+#  let scene, _state = state\<CR>
+#  \<CR>
+#  scene.actions\<CR>
+#  |> Map.fold (fun prev action position ->\<CR>
+#  let newState =\<CR>
+#  match action with\<CR>
+#  | "palette-select" ->     Palette.selectFrom position prev\<CR>
+#  | "cube-create" ->        Model.addCubeToModel prev\<CR>
+#  | "cube-destroy" ->       prev\<CR>
+#  |> AppState.toggleOn Destroy\<CR>
+#  |> Model.removeCubeFromModel\<CR>
+#  | "cube-destroy-end" ->    prev\<CR>
+#  |> Model.copyTempToMain\<CR>
+#  |> AppState.toggleOff Destroy\<CR>
+#  |> Action.remove "cube-destroy"\<CR>
+#  | "cursor-move" ->        Cursor.move position prev\<CR>
+#  | "cursor-hide" ->        Cursor.hide prev\<CR>
+#  | "fill-toggle" ->        AppState.toggle Fill prev\<CR>
+#  | _ -> prev\<CR>
+#  \<CR>
+#  if (isBinaryAction action) then\<CR>
+#  Action.remove action newState\<CR>
+#  else newState\<CR>
+#  ) state\<CR>
+#  \<CR>
+#  \<CR>
+#  //TODO: Move to engine\<CR>
+#  let decelerateCamera delta state =\<CR>
+#  let scene, _ = state\<CR>
+#  \<CR>
+#  scene.actions\<CR>
+#  |> Map.fold (fun prev action position ->\<CR>
+#  let scene, _ = prev\<CR>
+#  let camera = scene.camera\<CR>
+#  \<CR>
+#  match action with\<CR>
+#  | "zoom-in"\<CR>
+#  | "zoom-out"\<CR>
+#  | "zoom" when camera.zoomVelocity <> 0.0f ->\<CR>
+#  if position.y = 0.0f then\<CR>
+#  moveCamera Camera.decelerateZoom delta prev\<CR>
+#  else prev\<CR>
+#  | "pitch-up"\<CR>
+#  | "pitch-down"\<CR>
+#  | "rotate" when camera.pitchVelocity <> 0.0f || camera.yawVelocity <> 0.0f ->\<CR>
+#  if position.x = 0.0f then\<CR>
+#  moveCamera Camera.decelerateYaw delta prev\<CR>
+#  else prev\<CR>
+#  |>\<CR>
+#  if position.y = 0.0f then\<CR>
+#  moveCamera Camera.deceleratePitch delta\<CR>
+#  else id\<CR>
+#  | "yaw-left"\<CR>
+#  | "yaw-right"\<CR>
+#  | "pitch-up"\<CR>
+#  | "pitch-down"\<CR>
+#  | "rotate" when camera.pitchVelocity = 0.0f && camera.yawVelocity = 0.0f ->\<CR>
+#  Action.remove action prev\<CR>
+#  | _ -> prev\<CR>
+#  ) state\<CR>
+#  \<CR>
+#  \<CR>
+#  let update delta (scene: Scene, state: AppState) =\<CR>
+#  let delta = float32 delta\<CR>
+#  \<CR>
+#  ({\<CR>
+#  scene with\<CR>
+#  cubes = Scene.rootNode\<CR>
+#  texts = cubeCount state :: (createMessages (scene, state) @ toggles state)\<CR>
+#  rects =\<CR>
+#  Palette.selectedRect scene state :: Palette.rects scene state\<CR>
+#  },\<CR>
+#  state)\<CR>
+#  |> ActivePlane.update\<CR>
+#  |> Axes.update\<CR>
+#  |> Cursor.update\<CR>
+#  |> decelerateCamera (delta * 5.0f)\<CR>
+#  \<CR>
+#  let start filename =\<CR>
+#  Engine.start "Matter: Builder" (init filename palette) processInput update\<CR>
+#
+Expect:
+  module Matter.Builder
+
+  open Silk.NET.Input.Common
+  open System.IO
+
+  open Matter
+
+  // TODO: Move camera handling to separate module
+  let setCamera func delta (scene, state) =
+    { scene with camera = func delta scene.camera }, state
+
+
+  let zoomCamera delta state = setCamera Camera.zoom delta state
+  let rotateCamera delta state = setCamera Camera.rotate delta state
+
+
+  let init modelPath palette : Scene -> (Scene * AppState) =
+    (fun scene ->
+      ( scene, AppState.initial modelPath palette )
+      |> Model.load
+    )
+
+
+  (*
+  TODO: These mappings need to eventually go into a config file so we need
+  a simpler way to build them. The conditional stuff needs to come out and
+  be replaced with more config, or context?! Of course!
+  *)
+
+  // TODO: Move camera handling to separate module
+  let processInput evt state =
+    let scene, _state = state
+
+    match evt with
+#    | Move(position)
+#      when Context.palette position state ->
+#      Action.store "cursor-hide" position state
+#    | Drag(Left, delta)
+#      when Context.moving delta state ->
+#      Action.store "cube-create" delta state
+#    | Drag(Right, delta) -> Action.store "rotate" delta state
+#    | Key(Key.ControlLeft, true) ->
+#      Action.storeKey "control" { x = 1.0f; y = 1.0f } true state
+#    | Key(Key.ControlRight, false)
+#    | Key(Key.ControlLeft, false) ->
+#      Action.remove "control" state
+#    | Key(Key.X, false) -> Action.storeKey "cube-destroy-end" Point.origin true state
+#    | Key(key, pressed) ->
+#      match key with
+#      | Key.S when Action.contains "control" state && pressed ->
+#        Action.storeKey "save" { x = 0.0f; y = 1.0f } pressed state
+#      | Key.Down when pressed ->
+#        Action.storeKey "activeplane-move" { x = 0.0f; y = -1.0f } pressed state
+#
+#      // action-direction (e.g. zoom-in or pitch-up) should be types containing
+#      // the deltas rather than strings
+#      | Key.Q -> Action.storeKey "zoom-in" { x = 0.0f; y = -1.0f } pressed state
+#      | Key.A -> Action.storeKey "pan-left" { x = -1.0f; y = 0.0f } pressed state
+#      | Key.S when not (Action.contains "control" state) ->  // FIXME: This won't scale
+#        Action.storeKey "pan-backward" { x = 0.0f; y = -1.0f } pressed state
+#      | Key.D -> Action.storeKey "pan-right" { x = 1.0f; y = 0.0f } pressed state
+#      | _ -> state
+#    | _ -> state
+#
+#
+#  let createMessages (scene, state) : list<Text> =
+#    if DateTime.Now < state.removeMessageAt then
+#      [{
+#        value = state.messages
+#        size = FontSize.S
+#        color = Color.white
+#      }]
+#    else
+#      []
+#
+#
+#  let toggles state : list<Text> =
+#    state.toggles
+#    |> MapUtil.valuesAsList
+#    |> List.mapi (fun i toggle ->
+#      {
+#        value = toggle.ui
+#        color = AppState.renderToggle Color.green Color.grey toggle
+#      }
+#    )
+#
+#
+#
+#  let cubeCount (state: AppState) : Text =
+#    {
+#      value = sprintf "%d" state.model.Count
+#      color = Color.white
+#    }
+#
+#
+#  // TODO: Move camera handling to separate module
+#  let moveCamera moveFunc delta (scene, state) =
+#    ({ scene with camera = moveFunc delta scene.camera }, state)
+#    |> Cursor.show
+#
+#
+#  let BinaryActions =
+#    [
+#      "activeplane-move"
+#      "cube-create"
+#      "cube-destroy-end"
+#      "fill-start"
+#    ]
+#
+#
+#  let isBinaryAction action =
+#    List.contains action BinaryActions
+#
+#
+#  //TODO: Move camera handling to engine or at least a separate module
+#  let processActions state =
+#    let scene, _state = state
+#
+#    scene.actions
+#    |> Map.fold (fun prev action position ->
+#      let newState =
+#        match action with
+#        | "palette-select" ->     Palette.selectFrom position prev
+#        | "cube-create" ->        Model.addCubeToModel prev
+#        | "cube-destroy" ->       prev
+#                                  |> AppState.toggleOn Destroy
+#                                  |> Model.removeCubeFromModel
+#        | "cube-destroy-end" ->    prev
+#                                  |> Model.copyTempToMain
+#                                  |> AppState.toggleOff Destroy
+#                                  |> Action.remove "cube-destroy"
+#        | "cursor-move" ->        Cursor.move position prev
+#        | "cursor-hide" ->        Cursor.hide prev
+#        | "fill-toggle" ->        AppState.toggle Fill prev
+#        | _ -> prev
+#
+#      if (isBinaryAction action) then
+#        Action.remove action newState
+#      else newState
+#    ) state
+#
+#
+#  //TODO: Move to engine
+#  let decelerateCamera delta state =
+#    let scene, _ = state
+#
+#    scene.actions
+#    |> Map.fold (fun prev action position ->
+#      let scene, _ = prev
+#      let camera = scene.camera
+#
+#      match action with
+#      | "zoom-in"
+#      | "zoom-out"
+#      | "zoom" when camera.zoomVelocity <> 0.0f ->
+#        if position.y = 0.0f then
+#          moveCamera Camera.decelerateZoom delta prev
+#        else prev
+#      | "pitch-up"
+#      | "pitch-down"
+#      | "rotate" when camera.pitchVelocity <> 0.0f || camera.yawVelocity <> 0.0f ->
+#        if position.x = 0.0f then
+#          moveCamera Camera.decelerateYaw delta prev
+#        else prev
+#        |>
+#          if position.y = 0.0f then
+#            moveCamera Camera.deceleratePitch delta
+#          else id
+#      | "yaw-left"
+#      | "yaw-right"
+#      | "pitch-up"
+#      | "pitch-down"
+#      | "rotate" when camera.pitchVelocity = 0.0f && camera.yawVelocity = 0.0f ->
+#        Action.remove action prev
+#      | _ -> prev
+#    ) state
+#
+#
+#  let update delta (scene: Scene, state: AppState) =
+#    let delta = float32 delta
+#
+#    ({
+#        scene with
+#          cubes = Scene.rootNode
+#          texts = cubeCount state :: (createMessages (scene, state) @ toggles state)
+#          rects =
+#            Palette.selectedRect scene state :: Palette.rects scene state
+#      },
+#      state)
+#    |> ActivePlane.update
+#    |> Axes.update
+#    |> Cursor.update
+#    |> decelerateCamera (delta * 5.0f)
+#
+#  let start filename =
+#    Engine.start "Matter: Builder" (init filename palette) processInput update
+#
+#

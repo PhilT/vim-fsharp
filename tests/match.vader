@@ -1,0 +1,27 @@
+Given fsharp:
+Do (Action on same line as condition):
+  i
+  match event with\<CR>
+  | Move(Left) -> Action.move("left")\<CR>
+  | Fire -> Action.fire
+
+Expect:
+  match event with
+  | Move(Left) -> Action.move("left")
+  | Fire -> Action.fire
+
+Do (Action on separate line):
+  i
+  match event with\<CR>
+  | Move(Left) ->\<CR>
+  Action.move("left")\<CR>
+  | Fire ->\<CR>
+  Action.fire
+
+Expect:
+  match event with
+  | Move(Left) ->
+    Action.move("left")
+  | Fire ->
+    Action.fire
+
