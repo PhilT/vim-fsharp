@@ -31,7 +31,6 @@ Do:
   a simpler way to build them. The conditional stuff needs to come out and\<CR>
   be replaced with more config, or context?! Of course!\<CR>
   *)\<CR>
-  \<CR>
   // TODO: Move camera handling to separate module\<CR>
   let processInput evt state =\<CR>
   let scene, _state = state\<CR>
@@ -224,7 +223,6 @@ Expect:
   a simpler way to build them. The conditional stuff needs to come out and
   be replaced with more config, or context?! Of course!
   *)
-
   // TODO: Move camera handling to separate module
   let processInput evt state =
     let scene, _state = state

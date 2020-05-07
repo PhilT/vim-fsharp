@@ -27,7 +27,6 @@ function! TrimSpacesAndComments(line)
   return substitute(line, '\v^\s*(.{-})\s*$', '\1', '')
 endfunction
 
-" TODO Ignore lines that are indented further than scope
 function! ScopedFind(regex, func_def, start_line, scope)
   let lnum = a:start_line
   let min_indent = a:scope - shiftwidth()
@@ -36,7 +35,7 @@ function! ScopedFind(regex, func_def, start_line, scope)
   let in_comment = 0
 
   while lnum >= 0 && (
-        \ in_comment || line == "" ||
+        \ in_comment || line == "" || indent > a:scope ||
         \ (line !~ a:regex && line !~ a:func_def && indent >= min_indent)
         \ )
     echom 'lnum:'.lnum.', indent:'.indent.', min_indent:'.min_indent
