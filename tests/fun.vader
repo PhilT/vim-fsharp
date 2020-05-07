@@ -60,3 +60,20 @@ Expect:
       else newState
     ) state
 
+Given fsharp:
+Do (Simulated auto-pairs parens insertion):
+  i
+  let someFunc () =\<CR>
+  Map.fold ()\<Esc>i
+  fun prev action ->\<CR>
+  \<Esc>O
+  multiline\<CR>
+  function body
+
+Expect:
+  let someFunc () =
+    Map.fold (fun prev action ->
+      multiline
+      function body
+    )
+

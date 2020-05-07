@@ -69,17 +69,20 @@ function! FSharpIndent()
   echom 'Detecting...'
 
 	if v:lnum == 0
-    echom 'Detected: At line 0. Setting indent to 0'
+    echom '! at line 0. Setting indent to 0'
     let indent = 0
 
   elseif current_line =~ '^}\|]\||]\|)$'
-    echom 'Detected: Dedent closing brackets: '.previous_indent
-    "let lnum = ScopedFind('(fun .*->$', v:lnum, current_indent)
-    "let indent = lnum == -1 ? previous_indent : indent(lnum)
-    let indent = previous_indent - width
+    echom '! dedent closing brackets: '.previous_indent
+    if previous_line =~ '(fun .* ->' && current_line =~ '^)$'
+      echom '!! closing lambda, keeping indent'
+      let indent = previous_indent
+    else
+      let indent = previous_indent - width
+    endif
 
   elseif current_line =~ '^|$'
-    echom 'Detected: start of match case or DU case'
+    echom '! start of match case or DU case'
     let lnum = ScopedFind('^\s*\(type\|match\)', '^\s*let .*=\s*$', v:lnum, current_indent)
     let line = lnum == -1 ? "" : getline(lnum)
 
@@ -95,39 +98,41 @@ function! FSharpIndent()
     endif
 
   elseif current_line =~ '^|>$'
-    echom 'Detected: `|>` pipeline operator on current line'
+    echom '! `|>` pipeline operator on current line'
     let indent = previous_indent
 
   elseif current_line =~ '^when$'
-    echom 'Detected: `when` in match expression'
+    echom '! `when` in match expression'
     let indent = previous_indent + width
 
   elseif current_line =~ '^\(elif\|else\)$'
-    echom 'Detected: `elif/else` on current line'
+    echom '! `elif/else` on current line'
     let indent = previous_indent - width
 
   elseif previous_line =~ '^\(let\|module\).*=$'
-    echom 'Detected: let/module ='
+    echom '! let/module ='
     let indent = previous_indent + width
 
   elseif previous_line =~ '^\(let\|type\).*=\(\s\({\|[\|[|\)\)\?$'
-    echom 'Detected: type/record/array/list'
+    echom '! type/record/array/list'
     let indent = previous_indent + width
 
   elseif previous_line =~ '^\([\|[|\|{\|[{\)$'
-    echom 'Detected: list/record'
+    echom '! list/record'
     let indent = previous_indent + width
 
   elseif previous_line =~ '(fun\s.*->$'
-    echom 'Detected: lambda'
+    echom '! lambda'
     let indent = previous_indent + width
 
   elseif previous_line =~ '^| .*->$'
-    echom 'Detected: single line match case'
+    echom '! match result expression'
     let indent = previous_indent + width
+    echom 'indenting to '.indent.', Width: '.width.', Previous: '.previous_indent
+    echom 'prev line:['.getline(previous_lnum).']'
 
   elseif (previous_lnum + 3) <= v:lnum
-    echom 'Detected: Two blank lines for end of function'
+    echom '! two blank lines for end of function'
     let lnum = ScopedFind('^\s*let \w\+ .\+ =\s*$', '^\s*let \w\+ .\+ =\s*$', v:lnum, current_indent)
     let line = lnum == -1 ? "" : getline(lnum)
 
@@ -138,7 +143,7 @@ function! FSharpIndent()
     endif
 
   elseif (previous_lnum + 2) <= v:lnum
-    echom 'Detected: One blank line for end of code block'
+    echom '! one blank line for end of code block'
     let lnum = ScopedFind('^\s*\(if .* then\)$', '^\s*\(let \w\+ .\+ =\s*\|let .*=\s*\|).*\)$', v:lnum, current_indent)
     let line = lnum == -1 ? "" : getline(lnum)
 
@@ -154,14 +159,17 @@ function! FSharpIndent()
 
   elseif previous_line =~ '^\(if\|elif\) .* then$'
         \ || previous_line =~ '^else$'
-    echom 'Detected: if/elif then'
+    echom '! if/elif then'
     let indent = previous_indent + width
 
   else
-    echom 'Default: Keep indent of previous line'
+    echom '- keep indent of previous line'
+    echom 'line matched ['.line.']'
     let indent = previous_indent
 
   endif
+
+  echom 'indent:'.indent
 
   return indent
 endfunction

@@ -124,14 +124,11 @@ Do:
   match action with\<CR>
   | "palette-select" ->     Palette.selectFrom position prev\<CR>
   | "cube-create" ->        Model.addCubeToModel prev\<CR>
-  | "cube-destroy" ->
-#  prev\<CR>
-#  |> AppState.toggleOn Destroy\<CR>
-#  |> Model.removeCubeFromModel\<CR>
-#  | "cursor-move" ->        Cursor.move position prev\<CR>
-#  | "cursor-hide" ->        Cursor.hide prev\<CR>
-#  | "fill-toggle" ->        AppState.toggle Fill prev\<CR>
-#  | _ -> prev\<CR>
+  | "cube-destroy" ->       prev |> AppState.toggleOn Destroy\<CR>
+  | "cursor-move" ->        Cursor.move position prev\<CR>
+  | "cursor-hide" ->        Cursor.hide prev\<CR>
+  | "fill-toggle" ->        AppState.toggle Fill prev\<CR>
+  | _ -> prev
 #  \<CR>
 #  if (isBinaryAction action) then\<CR>
 #  Action.remove action newState\<CR>
@@ -316,14 +313,11 @@ Expect:
         match action with
         | "palette-select" ->     Palette.selectFrom position prev
         | "cube-create" ->        Model.addCubeToModel prev
-        | "cube-destroy" ->
-#          prev
-#          |> AppState.toggleOn Destroy
-#          |> Model.removeCubeFromModel
-#        | "cursor-move" ->        Cursor.move position prev
-#        | "cursor-hide" ->        Cursor.hide prev
-#        | "fill-toggle" ->        AppState.toggle Fill prev
-#        | _ -> prev
+        | "cube-destroy" ->       prev |> AppState.toggleOn Destroy
+        | "cursor-move" ->        Cursor.move position prev
+        | "cursor-hide" ->        Cursor.hide prev
+        | "fill-toggle" ->        AppState.toggle Fill prev
+        | _ -> prev
 #
 #      if (isBinaryAction action) then
 #        Action.remove action newState
