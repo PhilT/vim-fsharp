@@ -12,3 +12,22 @@ Expect:
     |> doOtherThing
     |> andSomethingElse
 
+Do (Multiline pipeline within match):
+  i
+  match thing with\<CR>
+  | case 1 ->\<CR>
+  resultExpression\<CR>
+  | case 2 ->\<CR>
+  multilineExpression\<CR>
+  |> doSomethingWithResult\<CR>
+  |> doAnotherThing
+
+Expect:
+  match thing with
+  | case 1 ->
+    resultExpression
+  | case 2 ->
+    multilineExpression
+    |> doSomethingWithResult
+    |> doAnotherThing
+

@@ -11,7 +11,7 @@ Do:
   Go|
 
 Execute (ScopedFind):
-  let actual = ScopedFind('^\s*match', line('$'), indent(line('$')))
+  let actual = ScopedFind('^\s*match', '^\s*let\s.*=$', line('$'), indent(line('$')))
   AssertEqual 2, actual
 
 Given fsharp:

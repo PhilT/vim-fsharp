@@ -39,3 +39,16 @@ Expect:
 
   some other code
 
+Given fsharp:
+Do (with parentheses):
+  i
+  if (someCondition action) then\<CR>
+  Action.doThing action newState\<CR>
+  else\<CR>
+  newState
+
+Expect:
+  if (someCondition action) then
+    Action.doThing action newState
+  else
+    newState

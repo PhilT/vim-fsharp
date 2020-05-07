@@ -14,7 +14,7 @@
 " let b:did_indent = 1
 
 setlocal indentexpr=FSharpIndent()
-setlocal indentkeys+=0=\|,0=\|],0=when,0=elif,0=else
+setlocal indentkeys+=0=\|,0=\|],0=when,0=elif,0=else,0=\|\>
 
 " Only define the function once
 "if exists("*GetFsharpIndent")
@@ -27,35 +27,34 @@ function! TrimSpacesAndComments(line)
   return substitute(line, '\v^\s*(.{-})\s*$', '\1', '')
 endfunction
 
-
-function! ScopedFind(regex, start_line, scope)
-  let func_def = '^\s*let .*=\s*$'
+" TODO Ignore lines that are indented further than scope
+function! ScopedFind(regex, func_def, start_line, scope)
   let lnum = a:start_line
   let min_indent = a:scope - shiftwidth()
   let indent = min_indent
   let line = ""
-  let inComment = 0
+  let in_comment = 0
 
-  while inComment ||
-        \ (line !~ a:regex && line !~ func_def && lnum >= 0 && indent >= min_indent)
-    echom 'lnum:'.lnum
-    echom 'indent:'.indent
-    echom 'min_indent:'.min_indent
+  while lnum >= 0 && (
+        \ in_comment || line == "" ||
+        \ (line !~ a:regex && line !~ a:func_def && indent >= min_indent)
+        \ )
+    echom 'lnum:'.lnum.', indent:'.indent.', min_indent:'.min_indent
     let lnum -= 1
     let line = getline(lnum)
     let indent = indent(lnum)
 
     " Indicate if we are in a multiline comment
     if line =~ '*)$'
-      let inComment = 1
+      let in_comment = 1
     endif
     if line =~ '^\s*(*'
-      let inComment = 0
+      let in_comment = 0
     endif
   endwhile
 
-  echom '**** ScopedFind: ['.line.']'
-  return line =~ a:regex || line =~ func_def ? lnum : -1
+  echom 'ScopedFind matched on line '.lnum.': ['.line.']'
+  return line =~ a:regex || line =~ a:func_def ? lnum : -1
 endfunction
 
 
@@ -76,11 +75,13 @@ function! FSharpIndent()
 
   elseif current_line =~ '^}\|]\||]\|)$'
     echom 'Detected: Dedent closing brackets: '.previous_indent
+    "let lnum = ScopedFind('(fun .*->$', v:lnum, current_indent)
+    "let indent = lnum == -1 ? previous_indent : indent(lnum)
     let indent = previous_indent - width
 
   elseif current_line =~ '^|$'
     echom 'Detected: start of match case or DU case'
-    let lnum = ScopedFind('^\s*\(type\|match\)', v:lnum, current_indent)
+    let lnum = ScopedFind('^\s*\(type\|match\)', '^\s*let .*=\s*$', v:lnum, current_indent)
     let line = lnum == -1 ? "" : getline(lnum)
 
     if line =~ '^\s*type'
@@ -94,10 +95,16 @@ function! FSharpIndent()
       let indent = previous_line
     endif
 
+  elseif current_line =~ '^|>$'
+    echom 'Detected: `|>` pipeline operator on current line'
+    let indent = previous_indent
+
   elseif current_line =~ '^when$'
+    echom 'Detected: `when` in match expression'
     let indent = previous_indent + width
 
   elseif current_line =~ '^\(elif\|else\)$'
+    echom 'Detected: `elif/else` on current line'
     let indent = previous_indent - width
 
   elseif previous_line =~ '^\(let\|module\).*=$'
@@ -122,7 +129,7 @@ function! FSharpIndent()
 
   elseif (previous_lnum + 3) <= v:lnum
     echom 'Detected: Two blank lines for end of function'
-    let lnum = ScopedFind('^\s*let .*=\s*$', v:lnum, current_indent)
+    let lnum = ScopedFind('^\s*let \w\+ .\+ =\s*$', '^\s*let \w\+ .\+ =\s*$', v:lnum, current_indent)
     let line = lnum == -1 ? "" : getline(lnum)
 
     if line =~ '^\s*let'
@@ -132,16 +139,18 @@ function! FSharpIndent()
     endif
 
   elseif (previous_lnum + 2) <= v:lnum
-    echom 'Detected: Two blank lines for end of code block'
-    let lnum = ScopedFind('^\s*\(if .* then\)$', v:lnum, current_indent)
+    echom 'Detected: One blank line for end of code block'
+    let lnum = ScopedFind('^\s*\(if .* then\)$', '^\s*\(let \w\+ .\+ =\s*\|let .*=\s*\|).*\)$', v:lnum, current_indent)
     let line = lnum == -1 ? "" : getline(lnum)
 
     if line =~ '^\s*\(if .* then\)$'
       let indent = indent(lnum)
+    elseif line =~ '^\s*let \w\+ .\+ =\s*'
+      let indent = indent(lnum) + width
     elseif line =~ '^\s*let'
-      let indent = current_indent
+      let indent = indent(lnum)
     else
-      let indent = previous_line
+      let indent = previous_indent
     endif
 
   elseif previous_line =~ '^\(if\|elif\) .* then$'

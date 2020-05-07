@@ -43,7 +43,7 @@ Expect:
     anotherThing
 
 Given fsharp:
-  let func =
+  let func () =
     something
     if someCondition then
       doStuff
@@ -54,11 +54,11 @@ Do (End function when double indented):
   Go
   \<CR>
   \<CR>
-  let anotherFunc =\<CR>
+  let anotherFunc () =\<CR>
   anotherThing
 
 Expect:
-  let func =
+  let func () =
     something
     if someCondition then
       doStuff
@@ -66,6 +66,20 @@ Expect:
       doOtherStuff
 
 
-  let anotherFunc =
+  let anotherFunc () =
     anotherThing
+
+Given fsharp:
+Do (Multiline function with line-breaks):
+  i
+  let processActions (state: SomeType) =\<CR>
+  let a, b = state\<CR>
+  \<CR>
+  state.actions
+
+Expect:
+  let processActions (state: SomeType) =
+    let a, b = state
+
+    state.actions
 

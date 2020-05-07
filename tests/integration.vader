@@ -102,36 +102,33 @@ Do:
   |> Cursor.show\<CR>
   \<CR>
   \<CR>
-  let BinaryActions =
-#  [\<CR>
-#  "activeplane-move"\<CR>
-#  "cube-create"\<CR>
-#  "cube-destroy-end"\<CR>
-#  "fill-start"\<CR>
-#  ]\<CR>
-#  \<CR>
-#  \<CR>
-#  let isBinaryAction action =\<CR>
-#  List.contains action BinaryActions\<CR>
-#  \<CR>
-#  \<CR>
-#  //TODO: Move camera handling to engine or at least a separate module\<CR>
-#  let processActions state =\<CR>
-#  let scene, _state = state\<CR>
-#  \<CR>
-#  scene.actions\<CR>
-#  |> Map.fold (fun prev action position ->\<CR>
-#  let newState =\<CR>
-#  match action with\<CR>
-#  | "palette-select" ->     Palette.selectFrom position prev\<CR>
-#  | "cube-create" ->        Model.addCubeToModel prev\<CR>
-#  | "cube-destroy" ->       prev\<CR>
+  let BinaryActions =\<CR>
+  [\<CR>
+  "activeplane-move"\<CR>
+  "cube-create"\<CR>
+  "cube-destroy-end"\<CR>
+  "fill-start"\<CR>
+  ]\<CR>
+  \<CR>
+  \<CR>
+  let isBinaryAction action =\<CR>
+  List.contains action BinaryActions\<CR>
+  \<CR>
+  \<CR>
+  //TODO: Move camera handling to engine or at least a separate module\<CR>
+  let processActions state =\<CR>
+  let scene, _state = state\<CR>
+  \<CR>
+  scene.actions\<CR>
+  |> Map.fold (fun prev action position ->\<CR>
+  let newState =\<CR>
+  match action with\<CR>
+  | "palette-select" ->     Palette.selectFrom position prev\<CR>
+  | "cube-create" ->        Model.addCubeToModel prev\<CR>
+  | "cube-destroy" ->
+#  prev\<CR>
 #  |> AppState.toggleOn Destroy\<CR>
 #  |> Model.removeCubeFromModel\<CR>
-#  | "cube-destroy-end" ->    prev\<CR>
-#  |> Model.copyTempToMain\<CR>
-#  |> AppState.toggleOff Destroy\<CR>
-#  |> Action.remove "cube-destroy"\<CR>
 #  | "cursor-move" ->        Cursor.move position prev\<CR>
 #  | "cursor-hide" ->        Cursor.hide prev\<CR>
 #  | "fill-toggle" ->        AppState.toggle Fill prev\<CR>
@@ -143,7 +140,7 @@ Do:
 #  ) state\<CR>
 #  \<CR>
 #  \<CR>
-#  //TODO: Move to engine\<CR>
+#  //TODO: Move to engine
 #  let decelerateCamera delta state =\<CR>
 #  let scene, _ = state\<CR>
 #  \<CR>
@@ -299,35 +296,32 @@ Expect:
 
 
   let BinaryActions =
-#    [
-#      "activeplane-move"
-#      "cube-create"
-#      "cube-destroy-end"
-#      "fill-start"
-#    ]
-#
-#
-#  let isBinaryAction action =
-#    List.contains action BinaryActions
-#
-#
-#  //TODO: Move camera handling to engine or at least a separate module
-#  let processActions state =
-#    let scene, _state = state
-#
-#    scene.actions
-#    |> Map.fold (fun prev action position ->
-#      let newState =
-#        match action with
-#        | "palette-select" ->     Palette.selectFrom position prev
-#        | "cube-create" ->        Model.addCubeToModel prev
-#        | "cube-destroy" ->       prev
-#                                  |> AppState.toggleOn Destroy
-#                                  |> Model.removeCubeFromModel
-#        | "cube-destroy-end" ->    prev
-#                                  |> Model.copyTempToMain
-#                                  |> AppState.toggleOff Destroy
-#                                  |> Action.remove "cube-destroy"
+    [
+      "activeplane-move"
+      "cube-create"
+      "cube-destroy-end"
+      "fill-start"
+    ]
+
+
+  let isBinaryAction action =
+    List.contains action BinaryActions
+
+
+  //TODO: Move camera handling to engine or at least a separate module
+  let processActions state =
+    let scene, _state = state
+
+    scene.actions
+    |> Map.fold (fun prev action position ->
+      let newState =
+        match action with
+        | "palette-select" ->     Palette.selectFrom position prev
+        | "cube-create" ->        Model.addCubeToModel prev
+        | "cube-destroy" ->
+#          prev
+#          |> AppState.toggleOn Destroy
+#          |> Model.removeCubeFromModel
 #        | "cursor-move" ->        Cursor.move position prev
 #        | "cursor-hide" ->        Cursor.hide prev
 #        | "fill-toggle" ->        AppState.toggle Fill prev

@@ -1,5 +1,5 @@
 Given fsharp:
-Do:
+Do (Code inside a lambda):
   i
   List.mapi (fun i j ->\<CR>
   i, j\<CR>
@@ -10,7 +10,7 @@ Expect:
     i, j
   )
 
-Do:
+Do (Code in a record in a lambda):
   i
   List.mapi (fun i j ->\<CR>
   {\<CR>
@@ -26,3 +26,37 @@ Expect:
       thing = j
     }
   )
+
+Given fsharp:
+  let processActions state =
+    state.actions
+    |> Map.fold (fun prev action ->
+      let newState =
+        match action with
+        | "fire" -> fire prev
+        | "move" -> move prev
+        | _ -> prev
+
+Do (Blank line inside lambda):
+  Go
+  \<CR>
+  if (someCondition action) then\<CR>
+  Action.doThing action newState\<CR>
+  else newState\<CR>
+  ) state
+
+Expect:
+  let processActions state =
+    state.actions
+    |> Map.fold (fun prev action ->
+      let newState =
+        match action with
+        | "fire" -> fire prev
+        | "move" -> move prev
+        | _ -> prev
+
+      if (someCondition action) then
+        Action.doThing action newState
+      else newState
+    ) state
+
