@@ -1,0 +1,251 @@
+Given fsharp:
+Do:
+  i
+  // ### Array and List\<CR>
+  // The following applies to both arrays and lists.\<CR>
+  let anArray = [|\<CR>
+  item1\<CR>
+  item2\<CR>
+  |]\<CR>
+  \<CR>
+  \<CR>
+  let returnsList =\<CR>
+  [\<CR>
+  item1\<CR>
+  item2\<CR>
+  ]\<CR>
+  \<CR>
+  \<CR>
+  // ### Conditional\<CR>
+  let someFunc () =\<CR>
+  if someCond then doThing\<CR>
+  elif otherCond then doOther\<CR>
+  else doDefaultThing\<CR>
+  \<CR>
+  if someExpression then\<CR>
+  doSomething\<CR>
+  elif someOtherExpression then\<CR>
+  doAnotherThing\<CR>
+  else\<CR>
+  doSomethingElse\<CR>
+  \<CR>
+  // single blank line after if/else block to dedent\<CR>
+  \<CR>
+  \<CR>
+  // ### Lamba (`fun`)\<CR>
+  // Also supports auto-pairs\<CR>
+  List.map (fun x ->\<CR>
+  processMap\<CR>
+  )\<CR>
+  \<CR>
+  \<CR>
+  // ### Function (`let`)\<CR>
+  let someFunc args =\<CR>
+  doSomeStuff\<CR>
+  doMoreStuff\<CR>
+  \<CR>
+  singleLineBreaksStaysInLet\<CR>
+  \<CR>
+  \<CR>
+  // Double line break resets to previous let indent\<CR>
+  // Even when deeply nested\<CR>
+  let anotherFunc =\<CR>
+  doDifferentStuff\<CR>
+  \<CR>
+  \<CR>
+  // ### Match\<CR>
+  // Supports nested match expressions and dedenting when default case entered.\<CR>
+  match action with\<CR>
+  | compactCase1 -> result1\<CR>
+  | compactCase2 -> result2\<CR>
+  | multilineCase3 ->\<CR>
+  result3\<CR>
+  | multilineWithCondition4 ->\<CR>
+  when condition ->\<CR>
+  result4\<CR>
+  | nestedMatch ->\<CR>
+  match nested with\<CR>
+  | nestedCase5 ->\<CR>
+  result5\<CR>
+  | _ -> nestedDefaultCase\<CR>
+  | _ -> defaultCase\<CR>
+  \<CR>
+  \<CR>
+  // ### Module\<CR>
+  module Example\<CR>
+  let func =\<CR>
+  doSomething\<CR>
+  \<CR>
+  module Example =\<CR>
+  let func =\<CR>
+  doSomething\<CR>
+  \<CR>
+  \<CR>
+  // ### Pipelining\<CR>
+  let func =\<CR>
+  doSomething\<CR>
+  |> andAnotherThing\<CR>
+  |> andOneMoreThing\<CR>
+  \<CR>
+  // Supports multiline pipeline expressions.\<CR>
+  doSomething\<CR>
+  |>\<CR>
+  if condition then\<CR>
+  doThis\<CR>
+  else\<CR>
+  doThat\<CR>
+  \<CR>
+  \<CR>
+  // ### Type (Record, Discriminated Union)\<CR>
+  type SomeRecord = {\<CR>
+  Field1: int\<CR>
+  Field2: string\<CR>
+  }\<CR>
+  \<CR>
+  let someFunc () =\<CR>
+  {\<CR>
+  Field1 = 1\<CR>
+  Field2 = "something"\<CR>
+  }\<CR>
+  \<CR>
+  \<CR>
+  let someRecord = {\<CR>
+  Field1 = 1\<CR>
+  Field2 = "something"\<CR>
+  }\<CR>
+  \<CR>
+  \<CR>
+  { someRecord with\<CR>
+  Field1 = 2\<CR>
+  }\<CR>
+  \<CR>
+  \<CR>
+  let newRecord = {\<CR>
+  someRecord with\<CR>
+  Field1 = 3\<CR>
+  }
+
+Expect:
+  // ### Array and List
+  // The following applies to both arrays and lists.
+  let anArray = [|
+    item1
+    item2
+  |]
+
+
+  let returnsList =
+    [
+      item1
+      item2
+    ]
+
+
+  // ### Conditional
+  let someFunc () =
+    if someCond then doThing
+    elif otherCond then doOther
+    else doDefaultThing
+
+    if someExpression then
+      doSomething
+    elif someOtherExpression then
+      doAnotherThing
+    else
+      doSomethingElse
+
+    // single blank line after if/else block to dedent
+
+
+  // ### Lamba (`fun`)
+  // Also supports auto-pairs
+  List.map (fun x ->
+    processMap
+  )
+
+
+  // ### Function (`let`)
+  let someFunc args =
+    doSomeStuff
+    doMoreStuff
+
+    singleLineBreaksStaysInLet
+
+
+  // Double line break resets to previous let indent
+  // Even when deeply nested
+  let anotherFunc =
+    doDifferentStuff
+
+
+  // ### Match
+  // Supports nested match expressions and dedenting when default case entered.
+  match action with
+  | compactCase1 -> result1
+  | compactCase2 -> result2
+  | multilineCase3 ->
+    result3
+  | multilineWithCondition4 ->
+    when condition ->
+    result4
+  | nestedMatch ->
+    match nested with
+    | nestedCase5 ->
+      result5
+    | _ -> nestedDefaultCase
+  | _ -> defaultCase
+
+
+  // ### Module
+  module Example
+  let func =
+    doSomething
+
+  module Example =
+    let func =
+      doSomething
+
+
+  // ### Pipelining
+  let func =
+    doSomething
+    |> andAnotherThing
+    |> andOneMoreThing
+
+  // Supports multiline pipeline expressions.
+  doSomething
+  |>
+    if condition then
+      doThis
+    else
+      doThat
+
+
+  // ### Type (Record, Discriminated Union)
+  type SomeRecord = {
+    Field1: int
+    Field2: string
+  }
+
+  let someFunc () =
+    {
+      Field1 = 1
+      Field2 = "something"
+    }
+
+
+  let someRecord = {
+    Field1 = 1
+    Field2 = "something"
+  }
+
+
+  { someRecord with
+      Field1 = 2
+  }
+
+
+  let newRecord = {
+    someRecord with
+      Field1 = 3
+  }
