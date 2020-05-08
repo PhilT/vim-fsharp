@@ -57,13 +57,30 @@ function! ScopedFind(regex, func_def, start_line, scope)
   return line =~ a:regex || line =~ a:func_def ? lnum : -1
 endfunction
 
-function! FindPair(start_word, middle_word, end_word)
-  echom 'Currently at line: '.line('.').' and column: '.col('.')
-  normal 'h'
-  let lnum = searchpair(a:start_word, a:middle_word, a:end_word, 'bWn')
+function! IsInCommentOrString()
+  let symbol_type = synIDattr(synID(line("."), col("."), 0), "name")
+  echom 'IsInCommentOrString: '.symbol_type.' at line '.line('.').', column '.col('.')
+  return (symbol_type =~? 'comment\|string')
+endfunction
 
-  echom 'FindPair matched on line '.lnum.': ['.line.']'
-  return indent(lnum)
+function! SkipFunc()
+  return IsInCommentOrString()
+endfunction
+
+function! FindPair(start_word, middle_word, end_word)
+  echom 'FindPair: Currently at line: '.line('.').' and column: '.col('.')
+
+  " Make sure we're inside the pair if outside but doesn't affect
+  " if we're already inside due to auto-pairs
+  execute 'normal! h'
+  let lnum = searchpair(a:start_word, a:middle_word, a:end_word, 'bWn', 'SkipFunc()')
+
+  echom 'FindPair matched on line '.lnum.': ['.getline(lnum).']'
+  return lnum
+endfunction
+
+function! IndentPair(start_word, middle_word, end_word)
+  return indent(FindPair(a:start_word, a:middle_word, a:end_word))
 endfunction
 
 function! FSharpIndent()
@@ -82,15 +99,15 @@ function! FSharpIndent()
     let indent = 0
 
   elseif current_line =~ '^}$'
-    let indent = FindPair('{', '', '}')
+    let indent = IndentPair('{', '', '}')
     echom '! dedent `}`: '.indent
 
   elseif current_line =~ '^\(]\||]\)$'
-    let indent = FindPair('\[', '', '\]')
+    let indent = IndentPair('\[', '', '\]')
     echom '! dedent `]`: '.indent
 
   elseif current_line =~ '^)$'
-    let indent = FindPair('(', '', ')')
+    let indent = IndentPair('(', '', ')')
     echom '! dedent `)`: '.indent
 
   elseif current_line =~ '^|$'

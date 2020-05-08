@@ -7,4 +7,3 @@ syntax enable
 set nomore
 set noswapfile
 set viminfo=
-set filetype=fsharp
