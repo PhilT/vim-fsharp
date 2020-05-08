@@ -49,3 +49,16 @@ Expect:
     | Type1 of string
     | Type2 of string
 
+Do (Copy and update):
+  i
+  { record with\<CR>
+  field1 = "filled"\<CR>
+  field2 = "mmmmm"\<CR>
+  }
+
+Expect:
+  { record with
+      field1 = "filled"
+      field2 = "mmmmm"
+  }
+

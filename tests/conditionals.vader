@@ -52,3 +52,39 @@ Expect:
     Action.doThing action newState
   else
     newState
+
+Given fsharp:
+Do (compact format):
+  i
+  let someFunc () =\<CR>
+  if someCond then doThing\<CR>
+  elif otherCond then doOther\<CR>
+  else doDefaultThing
+
+Expect:
+  let someFunc () =
+    if someCond then doThing
+    elif otherCond then doOther
+    else doDefaultThing
+
+Given fsharp:
+Do (conditional within pipeline):
+  i
+  let someFunc () =\<CR>
+  someOtherThing\<CR>
+  |>\<CR>
+  if (someCondition action) then\<CR>
+  Action.doThing action newState\<CR>
+  else\<CR>
+  newState
+
+Expect:
+  let someFunc () =
+    someOtherThing
+    |>
+      if (someCondition action) then
+        Action.doThing action newState
+      else
+        newState
+
+

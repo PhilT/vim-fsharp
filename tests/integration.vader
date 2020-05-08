@@ -128,69 +128,50 @@ Do:
   | "cursor-move" ->        Cursor.move position prev\<CR>
   | "cursor-hide" ->        Cursor.hide prev\<CR>
   | "fill-toggle" ->        AppState.toggle Fill prev\<CR>
-  | _ -> prev
-#  \<CR>
-#  if (isBinaryAction action) then\<CR>
-#  Action.remove action newState\<CR>
-#  else newState\<CR>
-#  ) state\<CR>
-#  \<CR>
-#  \<CR>
-#  //TODO: Move to engine
-#  let decelerateCamera delta state =\<CR>
-#  let scene, _ = state\<CR>
-#  \<CR>
-#  scene.actions\<CR>
-#  |> Map.fold (fun prev action position ->\<CR>
-#  let scene, _ = prev\<CR>
-#  let camera = scene.camera\<CR>
-#  \<CR>
-#  match action with\<CR>
-#  | "zoom-in"\<CR>
-#  | "zoom-out"\<CR>
-#  | "zoom" when camera.zoomVelocity <> 0.0f ->\<CR>
-#  if position.y = 0.0f then\<CR>
-#  moveCamera Camera.decelerateZoom delta prev\<CR>
-#  else prev\<CR>
-#  | "pitch-up"\<CR>
-#  | "pitch-down"\<CR>
-#  | "rotate" when camera.pitchVelocity <> 0.0f || camera.yawVelocity <> 0.0f ->\<CR>
-#  if position.x = 0.0f then\<CR>
-#  moveCamera Camera.decelerateYaw delta prev\<CR>
-#  else prev\<CR>
-#  |>\<CR>
-#  if position.y = 0.0f then\<CR>
-#  moveCamera Camera.deceleratePitch delta\<CR>
-#  else id\<CR>
-#  | "yaw-left"\<CR>
-#  | "yaw-right"\<CR>
-#  | "pitch-up"\<CR>
-#  | "pitch-down"\<CR>
-#  | "rotate" when camera.pitchVelocity = 0.0f && camera.yawVelocity = 0.0f ->\<CR>
-#  Action.remove action prev\<CR>
-#  | _ -> prev\<CR>
-#  ) state\<CR>
-#  \<CR>
-#  \<CR>
-#  let update delta (scene: Scene, state: AppState) =\<CR>
-#  let delta = float32 delta\<CR>
-#  \<CR>
-#  ({\<CR>
-#  scene with\<CR>
-#  cubes = Scene.rootNode\<CR>
-#  texts = cubeCount state :: (createMessages (scene, state) @ toggles state)\<CR>
-#  rects =\<CR>
-#  Palette.selectedRect scene state :: Palette.rects scene state\<CR>
-#  },\<CR>
-#  state)\<CR>
-#  |> ActivePlane.update\<CR>
-#  |> Axes.update\<CR>
-#  |> Cursor.update\<CR>
-#  |> decelerateCamera (delta * 5.0f)\<CR>
-#  \<CR>
-#  let start filename =\<CR>
-#  Engine.start "Matter: Builder" (init filename palette) processInput update\<CR>
-#
+  | _ -> prev\<CR>
+  \<CR>
+  if (isBinaryAction action) then\<CR>
+  Action.remove action newState\<CR>
+  else newState\<CR>
+  ) state\<CR>
+  \<CR>
+  \<CR>
+  //TODO: Move to engine\<CR>
+  let decelerateCamera delta state =\<CR>
+  let scene, _ = state\<CR>
+  \<CR>
+  match action with\<CR>
+  | "pitch-up"\<CR>
+  | "pitch-down"\<CR>
+  | "rotate" when camera.pitchVelocity <> 0.0f || camera.yawVelocity <> 0.0f ->\<CR>
+  if position.x = 0.0f then\<CR>
+  moveCamera Camera.decelerateYaw delta prev\<CR>
+  else prev\<CR>
+  if position.y = 0.0f then\<CR>
+  moveCamera Camera.deceleratePitch delta\<CR>
+  else id\<CR>
+  | "yaw-left"\<CR>
+  | "yaw-right"\<CR>
+  | "pitch-up"\<CR>
+  | "pitch-down"\<CR>
+  | "rotate" when camera.pitchVelocity = 0.0f && camera.yawVelocity = 0.0f ->\<CR>
+  Action.remove action prev\<CR>
+  | _ -> prev\<CR>
+  \<CR>
+  \<CR>
+  let update delta (scene: Scene, state: AppState) =\<CR>
+  let delta = float32 delta\<CR>
+  \<CR>
+  (scene, state)\<CR>
+  |> ActivePlane.update\<CR>
+  |> Axes.update\<CR>
+  |> Cursor.update\<CR>
+  |> decelerateCamera (delta * 5.0f)\<CR>
+  \<CR>
+  \<CR>
+  let start filename =\<CR>
+  Engine.start "Matter: Builder" (init filename palette) processInput update
+
 Expect:
   module Matter.Builder
 
@@ -318,66 +299,46 @@ Expect:
         | "cursor-hide" ->        Cursor.hide prev
         | "fill-toggle" ->        AppState.toggle Fill prev
         | _ -> prev
-#
-#      if (isBinaryAction action) then
-#        Action.remove action newState
-#      else newState
-#    ) state
-#
-#
-#  //TODO: Move to engine
-#  let decelerateCamera delta state =
-#    let scene, _ = state
-#
-#    scene.actions
-#    |> Map.fold (fun prev action position ->
-#      let scene, _ = prev
-#      let camera = scene.camera
-#
-#      match action with
-#      | "zoom-in"
-#      | "zoom-out"
-#      | "zoom" when camera.zoomVelocity <> 0.0f ->
-#        if position.y = 0.0f then
-#          moveCamera Camera.decelerateZoom delta prev
-#        else prev
-#      | "pitch-up"
-#      | "pitch-down"
-#      | "rotate" when camera.pitchVelocity <> 0.0f || camera.yawVelocity <> 0.0f ->
-#        if position.x = 0.0f then
-#          moveCamera Camera.decelerateYaw delta prev
-#        else prev
-#        |>
-#          if position.y = 0.0f then
-#            moveCamera Camera.deceleratePitch delta
-#          else id
-#      | "yaw-left"
-#      | "yaw-right"
-#      | "pitch-up"
-#      | "pitch-down"
-#      | "rotate" when camera.pitchVelocity = 0.0f && camera.yawVelocity = 0.0f ->
-#        Action.remove action prev
-#      | _ -> prev
-#    ) state
-#
-#
-#  let update delta (scene: Scene, state: AppState) =
-#    let delta = float32 delta
-#
-#    ({
-#        scene with
-#          cubes = Scene.rootNode
-#          texts = cubeCount state :: (createMessages (scene, state) @ toggles state)
-#          rects =
-#            Palette.selectedRect scene state :: Palette.rects scene state
-#      },
-#      state)
-#    |> ActivePlane.update
-#    |> Axes.update
-#    |> Cursor.update
-#    |> decelerateCamera (delta * 5.0f)
-#
-#  let start filename =
-#    Engine.start "Matter: Builder" (init filename palette) processInput update
-#
-#
+
+      if (isBinaryAction action) then
+        Action.remove action newState
+      else newState
+    ) state
+
+
+  //TODO: Move to engine
+  let decelerateCamera delta state =
+    let scene, _ = state
+
+    match action with
+    | "pitch-up"
+    | "pitch-down"
+    | "rotate" when camera.pitchVelocity <> 0.0f || camera.yawVelocity <> 0.0f ->
+      if position.x = 0.0f then
+        moveCamera Camera.decelerateYaw delta prev
+      else prev
+      if position.y = 0.0f then
+        moveCamera Camera.deceleratePitch delta
+      else id
+    | "yaw-left"
+    | "yaw-right"
+    | "pitch-up"
+    | "pitch-down"
+    | "rotate" when camera.pitchVelocity = 0.0f && camera.yawVelocity = 0.0f ->
+      Action.remove action prev
+    | _ -> prev
+
+
+  let update delta (scene: Scene, state: AppState) =
+    let delta = float32 delta
+
+    (scene, state)
+    |> ActivePlane.update
+    |> Axes.update
+    |> Cursor.update
+    |> decelerateCamera (delta * 5.0f)
+
+
+  let start filename =
+    Engine.start "Matter: Builder" (init filename palette) processInput update
+

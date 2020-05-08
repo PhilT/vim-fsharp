@@ -1,1 +1,1 @@
-nvim -Nu init.vim
+nvim -Nu init.vim $args

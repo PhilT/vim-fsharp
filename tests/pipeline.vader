@@ -12,7 +12,7 @@ Expect:
     |> doOtherThing
     |> andSomethingElse
 
-Do (Multiline pipeline within match):
+Do (Multi pipeline within match):
   i
   match thing with\<CR>
   | case 1 ->\<CR>
@@ -30,4 +30,21 @@ Expect:
     multilineExpression
     |> doSomethingWithResult
     |> doAnotherThing
+
+Do (Multiline pipeline expression):
+  i
+  doSomething\<CR>
+  |>\<CR>
+  if someCond then\<CR>
+  doThis\<CR>
+  else\<CR>
+  doThat
+
+Expect:
+  doSomething
+  |>
+    if someCond then
+      doThis
+    else
+      doThat
 
