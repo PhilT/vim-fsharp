@@ -9,9 +9,8 @@
 
 ## Why?
 
-* vim-fsharp hasn't been touched in a couple of years
+* vim-fsharp hasn't been touched in a couple of years and is in need of updating
 * Language features can more easily be provided by an LSP (e.g. fsharp-language-server)
-* The current indent rules don't seem to gel with the way standard F# is written
 * Enhancements to indent rules can provide a better experience
 * Indents are fully tested allowing more rules to be added without breaking
   existing functionality
