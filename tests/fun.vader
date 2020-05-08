@@ -1,5 +1,5 @@
 Given fsharp:
-Do (Code inside a lambda):
+Do (Inside a lambda):
   i
   List.mapi (fun i j ->\<CR>
   i, j\<CR>
@@ -10,7 +10,7 @@ Expect:
     i, j
   )
 
-Do (Code in a record in a lambda):
+Do (In a record in a lambda):
   i
   List.mapi (fun i j ->\<CR>
   {\<CR>
