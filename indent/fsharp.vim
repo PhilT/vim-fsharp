@@ -28,7 +28,7 @@ function! s:TrimSpacesAndComments(line)
 endfunction
 
 " TODO can we merge the 2 regexes?
-function! s:ScopedFind(regex, func_def, start_line, scope)
+function! s:ScopedFind(regex, start_line, scope)
   let lnum = a:start_line
   let min_indent = a:scope - shiftwidth()
   let indent = min_indent
@@ -37,7 +37,7 @@ function! s:ScopedFind(regex, func_def, start_line, scope)
 
   while lnum >= 0 && (
         \ in_comment || line == "" || indent > a:scope ||
-        \ (line !~ a:regex && line !~ a:func_def && indent >= min_indent)
+        \ (line !~ a:regex && indent >= min_indent)
         \ )
     echom 'lnum:'.lnum.', indent:'.indent.', min_indent:'.min_indent
     let lnum -= 1
@@ -54,12 +54,12 @@ function! s:ScopedFind(regex, func_def, start_line, scope)
   endwhile
 
   echom 'ScopedFind matched on line '.lnum.': ['.line.']'
-  return line =~ a:regex || line =~ a:func_def ? lnum : -1
+  return line =~ a:regex ? lnum : -1
 endfunction
 
 function! s:IsInCommentOrString()
   let symbol_type = synIDattr(synID(line("."), col("."), 0), "name")
-  echom 'IsInCommentOrString: '.symbol_type.' at line '.line('.').', column '.col('.')
+  echom 'IsInCommentOrString: '.symbol_type.' at line '.line('.').', col '.col('.')
   return (symbol_type =~? 'comment\|string')
 endfunction
 
@@ -73,7 +73,8 @@ function! s:FindPair(start_word, middle_word, end_word)
   " Make sure we're inside the pair if outside but doesn't affect
   " if we're already inside due to auto-pairs
   execute 'normal! h'
-  let lnum = searchpair(a:start_word, a:middle_word, a:end_word, 'bWn', 's:SkipFunc()')
+  let lnum = searchpair(a:start_word, a:middle_word, a:end_word,
+        \ 'bWn', 's:SkipFunc()')
 
   echom 'FindPair matched on line '.lnum.': ['.getline(lnum).']'
   return lnum
@@ -112,7 +113,11 @@ function! FSharpIndent()
 
   elseif current_line =~ '^|$'
     echom '! start of match case or DU case'
-    let lnum = s:ScopedFind('^\s*\(type\|match\)', '^\s*let .*=\s*$', v:lnum, current_indent)
+    " Search for type, match and terminate on let
+    let lnum = s:ScopedFind('^\s*\(type\|'
+          \ .'match\|'
+          \ .'let \w\+ .+ =\s*$\)',
+          \ v:lnum, current_indent)
     let line = lnum == -1 ? "" : getline(lnum)
 
     if line =~ '^\s*type'
@@ -174,7 +179,7 @@ function! FSharpIndent()
 
   elseif (previous_lnum + 3) <= v:lnum
     echom '! two blank lines for end of function'
-    let lnum = s:ScopedFind('^\s*let \w\+ .\+ =\s*$', '^\s*let \w\+ .\+ =\s*$', v:lnum, current_indent)
+    let lnum = s:ScopedFind('^\s*let \w\+ .\+ =\s*$', v:lnum, current_indent)
     let line = lnum == -1 ? "" : getline(lnum)
 
     if line =~ '^\s*let'
@@ -185,8 +190,11 @@ function! FSharpIndent()
 
   elseif (previous_lnum + 2) <= v:lnum
     echom '! one blank line for end of code block'
-    let lnum = s:ScopedFind('^\s*\(if .* then\)$',
-          \ '^\s*\(let \w\+ .\+ =\s*\|let .*=\s*\|).*\|.*(fun .* ->$\)$',
+    let lnum = s:ScopedFind('^\s*\(if .* then\|'
+          \ .'let \w\+ .\+ =\s*\|'
+          \ .'let .*=\s*\|'
+          \ .').*\|'.
+          \ '.*(fun .* ->$\)$',
           \ v:lnum, current_indent)
     let line = lnum == -1 ? "" : getline(lnum)
 
