@@ -31,15 +31,17 @@ endfunction
 function! s:ScopedFind(regex, start_line, scope)
   let lnum = a:start_line
   let min_indent = a:scope - shiftwidth()
+  let max_indent = a:scope
   let indent = min_indent
   let line = ""
   let in_comment = 0
 
   while lnum >= 0 && (
-        \ in_comment || line == "" || indent > a:scope ||
+        \ in_comment || line == "" || indent > max_indent ||
         \ (line !~ a:regex && indent >= min_indent)
         \ )
-    echom 'lnum:'.lnum.', indent:'.indent.', min_indent:'.min_indent
+    echom 'lnum:'.lnum.', indent:'.indent.', min_indent:'.min_indent.', max_indent:'.max_indent
+    echom 'in_comment:'.in_comment.', line:'.line
     let lnum -= 1
     let line = getline(lnum)
     let indent = indent(lnum)
@@ -183,13 +185,13 @@ function! FSharpIndent()
 
   elseif (previous_lnum + 3) <= v:lnum
     echom '! two blank lines for end of function'
-    let lnum = s:ScopedFind('^\s*let \w\+ .\+ =\s*$', v:lnum, current_indent)
+    let lnum = s:ScopedFind('^\s*let \w\+ .\+ =\s*$', v:lnum, previous_indent)
     let line = lnum == -1 ? "" : getline(lnum)
 
     if line =~ '^\s*let'
       let indent = indent(lnum)
     else
-      throw 'Unable to find previously defined function'
+      let indent = 0
     endif
 
   elseif (previous_lnum + 2) <= v:lnum
@@ -199,7 +201,7 @@ function! FSharpIndent()
           \ .'let .*=\s*\|'
           \ .').*\|'.
           \ '.*(fun .* ->$\)$',
-          \ v:lnum, current_indent)
+          \ v:lnum, previous_indent)
     let line = lnum == -1 ? "" : getline(lnum)
 
     if line =~ '^\s*\(if .* then\)$'
