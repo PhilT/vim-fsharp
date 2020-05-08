@@ -16,9 +16,18 @@
 * Indents are fully tested allowing more rules to be added without breaking
   existing functionality
 
+
+## Features
+
+* More robust indentation support
+* 2 line breaks ends function
+* Automated tests
+
+
 ## A list of indent rules
 
-The following code snippets were all typed without pressing the TAB key
+The following code snippets were all typed without pressing the TAB key. (See
+[test case here](blob/master/tests/readme.vader))
 This also serves as a bit of a style guide.
 
 ```fsharp
@@ -146,7 +155,6 @@ This also serves as a bit of a style guide.
       Field1 = 3
   }
 ```
-
 
 
 ## TODO
