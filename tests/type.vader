@@ -62,3 +62,17 @@ Expect:
       field2 = "mmmmm"
   }
 
+Do (Copy and update alt):
+  i
+  let state = {\<CR>
+  record with\<CR>
+  field1 = "filled"\<CR>
+  field2 = "mmmmm"\<CR>
+  }
+
+Expect:
+  let state = {
+    record with
+      field1 = "filled"
+      field2 = "mmmmm"
+  }

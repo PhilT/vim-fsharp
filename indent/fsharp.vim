@@ -160,8 +160,12 @@ function! FSharpIndent()
     let indent = previous_indent + width
 
   elseif previous_line =~ '^{ .\+ with$'
-    echom '! record copy and update expression'
+    echom '! record copy and update expression (same line)'
     let indent = previous_indent + width + width
+
+  elseif previous_line =~ '^.\+ with$'
+    echom '! record copy and update expression (newline)'
+    let indent = previous_indent + width
 
   elseif previous_line =~ '(fun\s.*->$'
     echom '! lambda'
