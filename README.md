@@ -185,3 +185,17 @@ This also serves as a bit of a style guide.
 * Add support for classes and a few other structures.
 * Optimise and cleanup code
 * Proper support for F# Interactive (.fsx/.fsi) files
+
+
+## Development
+
+### Running tests
+
+Run from either PowerShell or Bash.
+
+Syntax: `./test [-v] [-l] [testname]`
+
+* Run all tests in neovim - `./test`
+* Run a single test in vim - `./test -v let`
+* Run a single test with logging - `./test -l let`
+

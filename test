@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+vimcmd=nvim
+verbose=""
+
+while getopts ":vl" opt; do
+  case ${opt} in
+    v )
+      vimcmd=vim
+      ;;
+    l )
+      export VIM_FS_VERBOSE=true
+      verbose=-V1
+      ;;
+    \? )
+      echo "Usage: ./test [-v] [-l] [testname]"
+      ;;
+  esac
+done
+shift $((OPTIND -1))
+
+testname=$1; shift
+if [ -z $testname ]; then
+  tests=tests/*.vader
+else
+  tests=tests/$testname.vader
+fi
+
+$vimcmd -Es $verbose -Nu tests/vimrc -c "Vader! $tests"

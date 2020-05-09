@@ -20,7 +20,7 @@ if exists("*GetFsharpIndent")
 endif
 
 " Debug logging
-if $DEBUG_VIMFS == 'true'
+if $VIM_FS_VERBOSE == 'true'
   command! -nargs=1 Log echom <args>
 else
   command! -nargs=1 Log echom
