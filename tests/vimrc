@@ -1,9 +1,9 @@
 filetype off
 set rtp+=$XDG_CONFIG_HOME/nvim/plugged/vader.vim
-let &rtp.=','.expand('%:p:h:h')
-filetype plugin indent on
+let &rtp.=','.expand('%:p:h')
 set shiftwidth=2
+filetype plugin indent on
 syntax enable
 set nomore
 set noswapfile
-set viminfo=
+

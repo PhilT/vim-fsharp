@@ -6,28 +6,31 @@
 "
 " Only load this indent file when no other was loaded.
 
-"if exists("b:did_indent")
-"  finish
-"endif
-
-" Turned off for testing
-" let b:did_indent = 1
+if exists("b:did_indent")
+  finish
+endif
+let b:did_indent = 1
 
 setlocal indentexpr=FSharpIndent()
 setlocal indentkeys+=0=\|,0=\|],0=when,0=elif,0=else,0=\|\>
 
 " Only define the function once
-"if exists("*GetFsharpIndent")
-"  finish
-"endif
-"
+if exists("*GetFsharpIndent")
+  finish
+endif
+
+" Debug logging
+if $DEBUG_VIMFS == 'true'
+  command! -nargs=1 Log echom <args>
+else
+  command! -nargs=1 Log echom
+endif
 
 function! s:TrimSpacesAndComments(line)
   let line = substitute(a:line, '\v(.*)\/\/.*', '\1', '')
   return substitute(line, '\v^\s*(.{-})\s*$', '\1', '')
 endfunction
 
-" TODO can we merge the 2 regexes?
 function! s:ScopedFind(regex, start_line, scope)
   let lnum = a:start_line
   let min_indent = a:scope - shiftwidth()
@@ -40,8 +43,8 @@ function! s:ScopedFind(regex, start_line, scope)
         \ in_comment || line == "" || indent > max_indent ||
         \ (line !~ a:regex && indent >= min_indent)
         \ )
-    echom 'lnum:'.lnum.', indent:'.indent.', min_indent:'.min_indent.', max_indent:'.max_indent
-    echom 'in_comment:'.in_comment.', line:'.line
+    Log 'lnum:'.lnum.', indent:'.indent.', min_indent:'.min_indent.', max_indent:'.max_indent
+    Log 'in_comment:'.in_comment.', line:'.line
     let lnum -= 1
     let line = getline(lnum)
     let indent = indent(lnum)
@@ -55,13 +58,13 @@ function! s:ScopedFind(regex, start_line, scope)
     endif
   endwhile
 
-  echom 'ScopedFind matched on line '.lnum.': ['.line.']'
+  Log 'ScopedFind matched on line '.lnum.': ['.line.']'
   return line =~ a:regex ? lnum : -1
 endfunction
 
 function! s:IsInCommentOrString()
   let symbol_type = synIDattr(synID(line("."), col("."), 0), "name")
-  echom 'IsInCommentOrString: '.symbol_type.' at line '.line('.').', col '.col('.')
+  Log 'IsInCommentOrString: '.symbol_type.' at line '.line('.').', col '.col('.')
   return (symbol_type =~? 'comment\|string')
 endfunction
 
@@ -70,7 +73,7 @@ function! s:SkipFunc()
 endfunction
 
 function! s:FindPair(start_word, middle_word, end_word)
-  echom 'FindPair: Currently at line: '.line('.').' and column: '.col('.')
+  Log 'FindPair: Currently at line: '.line('.').' and column: '.col('.')
 
   " Make sure we're inside the pair if outside but doesn't affect
   " if we're already inside due to auto-pairs
@@ -78,7 +81,7 @@ function! s:FindPair(start_word, middle_word, end_word)
   let lnum = searchpair(a:start_word, a:middle_word, a:end_word,
         \ 'bWn', 's:SkipFunc()')
 
-  echom 'FindPair matched on line '.lnum.': ['.getline(lnum).']'
+  Log 'FindPair matched on line '.lnum.': ['.getline(lnum).']'
   return lnum
 endfunction
 
@@ -95,26 +98,26 @@ function! FSharpIndent()
   let width = shiftwidth()
   let indent = 0
 
-  echom 'Detecting...'
+  Log 'Detecting...'
 
 	if v:lnum == 0
-    echom '! at line 0. Setting indent to 0'
+    Log '! at line 0. Setting indent to 0'
     let indent = 0
 
   elseif current_line =~ '^}$'
     let indent = s:IndentPair('{', '', '}')
-    echom '! dedent `}`: '.indent
+    Log '! dedent `}`: '.indent
 
   elseif current_line =~ '^\(]\||]\)$'
     let indent = s:IndentPair('\[', '', '\]')
-    echom '! dedent `]`: '.indent
+    Log '! dedent `]`: '.indent
 
   elseif current_line =~ '^)$'
     let indent = s:IndentPair('(', '', ')')
-    echom '! dedent `)`: '.indent
+    Log '! dedent `)`: '.indent
 
   elseif current_line =~ '^|$'
-    echom '! start of match case or DU case'
+    Log '! start of match case or DU case'
     " Search for type, match and terminate on let
     let lnum = s:ScopedFind('^\s*\(type\|'
           \ .'match\|'
@@ -134,15 +137,15 @@ function! FSharpIndent()
     endif
 
   elseif current_line =~ '^|>$'
-    echom '! `|>` pipeline operator on current line'
+    Log '! `|>` pipeline operator on current line'
     let indent = previous_indent
 
   elseif current_line =~ '^when$'
-    echom '! `when` in match expression'
+    Log '! `when` in match expression'
     let indent = previous_indent + width
 
   elseif current_line =~ '^\(elif\|else\)$'
-    echom '! `elif/else` on current line'
+    Log '! `elif/else` on current line'
     if previous_line =~ '^\(if\|elif\)'
       let indent = previous_indent
     else
@@ -150,41 +153,41 @@ function! FSharpIndent()
     endif
 
   elseif previous_line =~ '^\(let\|module\).*=$'
-    echom '! let/module ='
+    Log '! let/module ='
     let indent = previous_indent + width
 
   elseif previous_line =~ '^\(let\|type\).*=\(\s\({\|[\|[|\)\)\?$'
-    echom '! type/record/array/list'
+    Log '! type/record/array/list'
     let indent = previous_indent + width
 
   elseif previous_line =~ '^\([\|[|\|{\|[{\|(\)$'
-    echom '! list/record/tuple'
+    Log '! list/record/tuple'
     let indent = previous_indent + width
 
   elseif previous_line =~ '^{ .\+ with$'
-    echom '! record copy and update expression (same line)'
+    Log '! record copy and update expression (same line)'
     let indent = previous_indent + width + width
 
   elseif previous_line =~ '^.\+ with$'
-    echom '! record copy and update expression (newline)'
+    Log '! record copy and update expression (newline)'
     let indent = previous_indent + width
 
   elseif previous_line =~ '(fun\s.*->$'
-    echom '! lambda'
+    Log '! lambda'
     let indent = previous_indent + width
 
   elseif previous_line =~ '^| .*->$'
-    echom '! match result expression'
+    Log '! match result expression'
     let indent = previous_indent + width
-    echom 'indenting to '.indent.', Width: '.width.', Previous: '.previous_indent
-    echom 'prev line:['.getline(previous_lnum).']'
+    Log 'indenting to '.indent.', Width: '.width.', Previous: '.previous_indent
+    Log 'prev line:['.getline(previous_lnum).']'
 
   elseif previous_line =~ '^|>$'
-    echom '! `|>` on previous line'
+    Log '! `|>` on previous line'
     let indent = previous_indent + width
 
   elseif (previous_lnum + 3) <= v:lnum
-    echom '! two blank lines for end of function'
+    Log '! two blank lines for end of function'
     let lnum = s:ScopedFind('^\s*let \w\+ .\+ =\s*$', v:lnum, previous_indent)
     let line = lnum == -1 ? "" : getline(lnum)
 
@@ -195,7 +198,7 @@ function! FSharpIndent()
     endif
 
   elseif (previous_lnum + 2) <= v:lnum
-    echom '! one blank line for end of code block'
+    Log '! one blank line for end of code block'
     let lnum = s:ScopedFind('^\s*\(if .* then\|'
           \ .'let \w\+ .\+ =\s*\|'
           \ .'let .*=\s*\|'
@@ -216,12 +219,12 @@ function! FSharpIndent()
 
   elseif previous_line =~ '^\(if\|elif\) .* then$'
         \ || previous_line =~ '^else$'
-    echom '! if/elif then'
+    Log '! if/elif then'
     let indent = previous_indent + width
 
   else
-    echom '- keep indent of previous line'
-    echom 'line matched ['.line.']'
+    Log '- keep indent of previous line'
+    Log 'line matched ['.line.']'
     let indent = previous_indent
 
   endif
