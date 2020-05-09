@@ -9,7 +9,7 @@
 
 ## Why?
 
-* vim-fsharp hasn't been touched in a couple of years and is in need of updating
+* **vim-fsharp** hasn't been touched in a couple of years and `indent/` is 4 years old
 * Language features can more easily be provided by an LSP (e.g. fsharp-language-server)
 * Enhancements to indent rules can provide a better experience
 * Indents are fully tested allowing more rules to be added without breaking
@@ -21,6 +21,7 @@
 * More robust indentation support
 * 2 line breaks ends function
 * Automated tests
+* Tested in Neovim 0.4.3 and Vim 8.2
 
 
 ## A list of indent rules
@@ -159,4 +160,4 @@ This also serves as a bit of a style guide.
 ## TODO
 
 * Add support for classes and a few other structures.
-
+* Optimise and cleanup code
