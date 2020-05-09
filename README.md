@@ -6,7 +6,11 @@
 
 * Indent: In-progress
 * Syntax: Copied from vim-ionide for now
-* Plugins: None
+* Plugin: None
+
+This plugin is currently focused on providing better indent support in F#. It's
+currently incomplete (not all syntax is covered). If you'd like to see support
+for some keywords do raise an issue (or a PR! ;) and I'll add it.
 
 
 ## Why?
@@ -15,8 +19,6 @@
 * Language features can be more easily provided by an LSP (e.g.
   [coc-fsharp](https://github.com/coc-extensions/coc-fsharp))
 * Enhancements to indent rules can provide a better experience
-* Indents are fully tested allowing more rules to be added without breaking
-  existing functionality
 * Other plugins don't improve the basic syntax and indent behaviour and seem to
   have issues on Windows platforms
 
@@ -25,7 +27,8 @@
 * Robust indentation support
 * 2 line breaks ends function
 * Single line break ends let binding
-* Automated tests
+* Automated tests - Rules can be added without breaking existing functionality
+* Developed on Windows 10 with Neovim 0.4.3
 * Tested in Neovim 0.4.3 and Vim 8.2
 * Tested on Windows 10 and Ubuntu Linux 20.04
 * Pure Vimscript
