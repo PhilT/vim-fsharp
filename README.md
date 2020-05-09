@@ -5,14 +5,15 @@
 ## Status
 
 * Indent: In-progress
-* Syntax: Copied from vim-fsharp for now
+* Syntax: Copied from vim-ionide for now
 * Plugins: None
 
 
 ## Why?
 
 * **vim-fsharp** hasn't been touched in a couple of years and `indent/` is 4 years old
-* Language features can be more easily provided by an LSP (e.g. fsharp-language-server)
+* Language features can be more easily provided by an LSP (e.g.
+  [coc-fsharp](https://github.com/coc-extensions/coc-fsharp))
 * Enhancements to indent rules can provide a better experience
 * Indents are fully tested allowing more rules to be added without breaking
   existing functionality
@@ -21,8 +22,9 @@
 
 ## Features
 
-* More robust indentation support
+* Robust indentation support
 * 2 line breaks ends function
+* Single line break ends let binding
 * Automated tests
 * Tested in Neovim 0.4.3 and Vim 8.2
 * Tested on Windows 10 and Ubuntu Linux 20.04
