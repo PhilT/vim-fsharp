@@ -12,11 +12,12 @@
 ## Why?
 
 * **vim-fsharp** hasn't been touched in a couple of years and `indent/` is 4 years old
-* Language features can more easily be provided by an LSP (e.g. fsharp-language-server)
+* Language features can be more easily provided by an LSP (e.g. fsharp-language-server)
 * Enhancements to indent rules can provide a better experience
 * Indents are fully tested allowing more rules to be added without breaking
   existing functionality
-
+* Other plugins don't improve the basic syntax and indent behaviour and seem to
+  have issues on Windows platforms
 
 ## Features
 
@@ -24,6 +25,20 @@
 * 2 line breaks ends function
 * Automated tests
 * Tested in Neovim 0.4.3 and Vim 8.2
+* Tested on Windows 10 and Ubuntu Linux 20.04
+* Pure Vimscript
+
+## Installation
+
+Use your plugin manager. I use [vim-plug](https://github.com/junegunn/vim-plug)
+
+```
+Plug 'PhilT/vim-fs'
+```
+
+If you use [vim-polyglot](https://github.com/sheerun/vim-polyglot) be sure to
+load **vim-fs** before it or `let g:polyglot_disabled = ['fsharp']` before
+loading plugins.
 
 
 ## A list of indent rules
@@ -163,3 +178,4 @@ This also serves as a bit of a style guide.
 
 * Add support for classes and a few other structures.
 * Optimise and cleanup code
+* Proper support F# Interactive (.fsx/.fsi) files
