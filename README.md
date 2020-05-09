@@ -15,7 +15,8 @@ for some keywords do raise an issue (or a PR! ;) and I'll add it.
 
 ## Why?
 
-* **vim-fsharp** hasn't been touched in a couple of years and `indent/` is 4 years old
+* [vim-fsharp](https://github.com/fsharp/vim-fsharp) hasn't been touched in a
+  couple of years and `indent/` is 4 years old
 * Language features can be more easily provided by an LSP (e.g.
   [coc-fsharp](https://github.com/coc-extensions/coc-fsharp))
 * Enhancements to indent rules can provide a better experience
@@ -183,4 +184,4 @@ This also serves as a bit of a style guide.
 
 * Add support for classes and a few other structures.
 * Optimise and cleanup code
-* Proper support F# Interactive (.fsx/.fsi) files
+* Proper support for F# Interactive (.fsx/.fsi) files
