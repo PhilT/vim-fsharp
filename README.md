@@ -1,5 +1,7 @@
 # An Opinionated F# Indent and Syntax plugin for Vim
 
+[![Build Status](https://travis-ci.org/PhilT/vim-fs.svg?branch=master)](https://travis-ci.org/PhilT/vim-fs)
+
 ## Status
 
 * Indent: In-progress
