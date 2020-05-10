@@ -96,7 +96,7 @@ function! FSharpIndent()
   let previous_indent = indent(previous_lnum)
   let previous_line = s:TrimSpacesAndComments(getline(previous_lnum))
   let width = shiftwidth()
-  let indent = 0
+  let indent = previous_indent
 
   Log 'Detecting...'
 
@@ -189,13 +189,7 @@ function! FSharpIndent()
   elseif (previous_lnum + 3) <= v:lnum
     Log '! two blank lines for end of function'
     let lnum = s:ScopedFind('^\s*let \w\+ .\+ =\s*$', v:lnum, previous_indent)
-    let line = lnum == -1 ? "" : getline(lnum)
-
-    if line =~ '^\s*let'
-      let indent = indent(lnum)
-    else
-      let indent = 0
-    endif
+    let indent = lnum == -1 ? 0 : indent(lnum)
 
   elseif (previous_lnum + 2) <= v:lnum
     Log '! one blank line for end of code block'
@@ -207,14 +201,11 @@ function! FSharpIndent()
           \ v:lnum, previous_indent)
     let line = lnum == -1 ? "" : getline(lnum)
 
-    if line =~ '^\s*\(if .* then\)$'
+    if lnum != -1
       let indent = indent(lnum)
-    elseif line =~ '^\s*let \w\+ .\+ =\s*\|(fun .* ->$'
-      let indent = indent(lnum) + width
-    elseif line =~ '^\s*let'
-      let indent = indent(lnum)
-    else
-      let indent = previous_indent
+      if line =~ '^\s*let \w\+ .\+ =\s*\|(fun .* ->$'
+        let indent += width
+      endif
     endif
 
   elseif previous_line =~ '^\(if\|elif\) .* then$'
@@ -225,7 +216,6 @@ function! FSharpIndent()
   else
     Log '- keep indent of previous line'
     Log 'line matched ['.line.']'
-    let indent = previous_indent
 
   endif
 
