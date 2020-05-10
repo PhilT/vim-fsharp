@@ -77,3 +77,62 @@ Expect:
   match event with
   | match case ->
 
+Given fsharp:
+  match event with
+  | match case 1 ->
+  doingIt
+  | case 2 ->
+  match nested with
+  | nested case 1 -> nestedDoingIt
+  | _ -> nestedCatchAll
+  | case 3 ->
+  match nested with
+  | nested case a ->
+  nestedDoingSomething
+  | anotherNestedCase ->
+  anotherNested
+  | _ -> defaultNestedCase
+  | _ -> outerCatchAll
+
+Do (Reformatting lines):
+  VG=
+
+Expect (Match cases to line up):
+  match event with
+  | match case 1 ->
+    doingIt
+  | case 2 ->
+    match nested with
+    | nested case 1 -> nestedDoingIt
+    | _ -> nestedCatchAll
+  | case 3 ->
+    match nested with
+    | nested case a ->
+      nestedDoingSomething
+    | anotherNestedCase ->
+      anotherNested
+    | _ -> defaultNestedCase
+  | _ -> outerCatchAll
+
+Given fsharp:
+Do (Conditionals inside match):
+  i
+  match event with\<CR>
+  | case 1 ->\<CR>
+  if condition then\<CR>
+  doSomething\<CR>
+  else\<CR>
+  { field1 = "string"\<CR>
+  }\<CR>
+  | case 2 ->
+
+Expect:
+  match event with
+  | case 1 ->
+    if condition then
+      doSomething
+    else
+      { field1 = "string"
+      }
+  | case 2 ->
+

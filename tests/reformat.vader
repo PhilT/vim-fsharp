@@ -1,0 +1,252 @@
+# Reformatting whole file
+Given fsharp:
+  let anArray = [|
+  item1
+  item2
+  |]
+
+Do:
+  VG=
+
+Expect:
+  let anArray = [|
+    item1
+    item2
+  |]
+
+Given fsharp:
+  let returnsList =
+  [
+  item1
+  item2
+  ]
+
+Do:
+  VG=
+
+Expect:
+  let returnsList =
+    [
+      item1
+      item2
+    ]
+
+Given fsharp:
+  type MyBase() =
+  member _.Func1 x =
+  x + 1
+
+  default _.Func2 y =
+  y + 2
+
+
+  type MyDerived() =
+  override _.Func1 x =
+  x + 10
+
+Do:
+  VG=
+
+Expect:
+  type MyBase() =
+    member _.Func1 x =
+      x + 1
+
+    default _.Func2 y =
+      y + 2
+
+
+  type MyDerived() =
+    override _.Func1 x =
+      x + 10
+
+Given fsharp:
+  let someFunc () =
+  if someCond then doThing
+  elif otherCond then doOther
+  else doDefaultThing
+
+  if someExpression then
+  doSomething
+  elif someOtherExpression then
+  doAnotherThing
+  else
+  doSomethingElse
+
+Do:
+  VG=
+
+Expect:
+  let someFunc () =
+    if someCond then doThing
+    elif otherCond then doOther
+    else doDefaultThing
+
+    if someExpression then
+      doSomething
+    elif someOtherExpression then
+      doAnotherThing
+    else
+      doSomethingElse
+
+Given fsharp:
+  List.map (fun x ->
+  processMap
+  )
+
+Do:
+  VG=
+
+Expect:
+  List.map (fun x ->
+    processMap
+  )
+
+Given fsharp:
+  let someFunc args =
+  doSomeStuff
+  doMoreStuff
+
+  singleLineBreaksStaysInLet
+
+Do:
+  VG=
+
+Expect:
+  let someFunc args =
+    doSomeStuff
+    doMoreStuff
+
+    singleLineBreaksStaysInLet
+
+Given fsharp:
+  let anotherFunc =
+  doDifferentStuff
+
+Do:
+  VG=
+
+Expect:
+  let anotherFunc =
+    doDifferentStuff
+
+Given fsharp:
+  module Example
+  let func =
+  doSomething
+
+  module Example =
+  let func =
+  doSomething
+
+Do:
+  VG=
+
+Expect:
+  module Example
+  let func =
+    doSomething
+
+  module Example =
+    let func =
+      doSomething
+
+Given fsharp:
+  let func =
+  doSomething
+  |> andAnotherThing
+  |> andOneMoreThing
+
+  doSomething
+  |>
+  if condition then
+  doThis
+  else
+  doThat
+
+Do:
+  VG=
+
+Expect:
+  let func =
+    doSomething
+    |> andAnotherThing
+    |> andOneMoreThing
+
+  doSomething
+  |>
+    if condition then
+      doThis
+    else
+      doThat
+
+Given fsharp:
+  type SomeRecord = {
+  Field1: int
+  Field2: string
+  }
+
+  let someFunc () =
+  {
+  Field1 = 1
+  Field2 = "something"
+  }
+
+Do:
+  VG=
+
+Expect:
+  type SomeRecord = {
+    Field1: int
+    Field2: string
+  }
+
+  let someFunc () =
+    {
+      Field1 = 1
+      Field2 = "something"
+    }
+
+Given fsharp:
+  let someRecord = {
+  Field1 = 1
+  Field2 = "something"
+  }
+
+Do:
+  VG=
+
+Expect:
+  let someRecord = {
+    Field1 = 1
+    Field2 = "something"
+  }
+
+Given fsharp:
+  { someRecord with
+  Field1 = 2
+  }
+
+Do:
+  VG=
+
+Expect:
+  { someRecord with
+      Field1 = 2
+  }
+
+Given fsharp:
+  let newRecord = {
+  someRecord with
+  Field1 = 3
+  }
+
+Do:
+  VG=
+
+Expect:
+  let newRecord = {
+    someRecord with
+      Field1 = 3
+  }
+

@@ -43,12 +43,13 @@ Expect:
     anotherThing
 
 Given fsharp:
-  let func () =
-    something
-    if someCondition then
-      doStuff
-    else
-      doOtherStuff
+  module MyModule =
+    let func () =
+      something
+      if someCondition then
+        doStuff
+      else
+        doOtherStuff
 
 Do (End function when double indented):
   Go
@@ -58,16 +59,17 @@ Do (End function when double indented):
   anotherThing
 
 Expect:
-  let func () =
-    something
-    if someCondition then
-      doStuff
-    else
-      doOtherStuff
+  module MyModule =
+    let func () =
+      something
+      if someCondition then
+        doStuff
+      else
+        doOtherStuff
 
 
-  let anotherFunc () =
-    anotherThing
+    let anotherFunc () =
+      anotherThing
 
 Given fsharp:
 Do (Multiline function with line-breaks):

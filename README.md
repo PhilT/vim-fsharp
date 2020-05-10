@@ -1,23 +1,25 @@
-# An Opinionated F# Indent and Syntax plugin for Vim
+# An Opinionated, Cross-platform F# Indent and Syntax plugin for Vim
 
 [![Build Status](https://travis-ci.org/PhilT/vim-fs.svg?branch=master)](https://travis-ci.org/PhilT/vim-fs)
 
 ## Status
 
-* Indent: In-progress as of May 2020
-* Syntax: Copied from [ionide-vim](https://github.com/ionide/Ionide-vim) for now
-* Plugin: None
+* **Indent:** Mostly complete as of May 2020
+* **Syntax:** Copied from [ionide-vim](https://github.com/ionide/Ionide-vim)
+  with some minor fixes
+* **Plugin:** None
 
-This plugin is currently focused on providing better indent support in F#. It's
-currently incomplete (not all syntax is covered). If you find any problems,
-raise an issue with some example code and providing it doesn't conflict with
-other rules, I'll add it.
+This plugin is currently focused on providing better indent support in F#.
+If you find any problems, raise an issue with some example code and providing
+it doesn't conflict with other rules, I'll add it. Otherwise, we'll have to work
+out a compromise.
 
 
 ## Why?
 
 * [vim-fsharp](https://github.com/fsharp/vim-fsharp) hasn't been touched in a
-  couple of years and `indent/` is 4 years old
+  couple of years and `indent/` is 4 years old. It appears to have been
+  abandoned.
 * Language features can be more easily provided by an LSP (e.g.
   [coc-fsharp](https://github.com/coc-extensions/coc-fsharp))
 * Enhancements to indent rules can provide a better experience
@@ -28,6 +30,7 @@ other rules, I'll add it.
 
 * Robust indentation support
 * 2 line breaks ends function
+* Reformating support (providing above 2 blank lines rule is followed)
 * Single line break ends let binding
 * Automated tests - Rules can be added without breaking existing functionality
 * Developed on Windows 10 with Neovim 0.4.3
@@ -68,6 +71,21 @@ This also serves as a bit of a style guide.
       item1
       item2
     ]
+
+
+  // ### Classes
+  // Indents members, including default and override
+  type MyBase() =
+    member _.Func1 x =
+      x + 1
+
+    default _.Func2 y =
+      y + 2
+
+
+  type MyDerived() =
+    override _.Func1 x =
+      x + 10
 
 
   // ### Conditional
@@ -183,12 +201,23 @@ This also serves as a bit of a style guide.
 
 ## TODO
 
-* Add support for classes and a few other structures.
 * Optimise and cleanup code
-* Proper support for F# Interactive (.fsx/.fsi) files
+* Check support for F# Interactive (.fsx/.fsi) files
+* Ensure [F# formatting conventions](https://github.com/fsprojects/fantomas/blob/master/docs/FormattingConventions.md)
+  are followed as much as possible
 
 
 ## Development
+
+### Workflow
+
+1. Add a test in `tests/`
+2. Add the minimal code to get it working
+3. Refactor
+4. Repeat steps 1-3 as required
+5. Add to `tests/integration.vader`
+6. Add to `README.md`
+7. Add to `tests/readme.vader`
 
 ### Minimal `vimrc` for manual testing
 

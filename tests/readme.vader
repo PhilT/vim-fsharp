@@ -1,3 +1,5 @@
+# Ensure this file is synced with README.md
+# This file ensures the README.md code indents as documented
 Given fsharp:
 Do:
   i
@@ -14,6 +16,21 @@ Do:
   item1\<CR>
   item2\<CR>
   ]\<CR>
+  \<CR>
+  \<CR>
+  // ### Classes\<CR>
+  // Indents members, including default and override\<CR>
+  type MyBase() =\<CR>
+  member _.Func1 x =\<CR>
+  x + 1\<CR>
+  \<CR>
+  default _.Func2 y =\<CR>
+  y + 2\<CR>
+  \<CR>
+  \<CR>
+  type MyDerived() =\<CR>
+  override _.Func1 x =\<CR>
+  x + 10\<CR>
   \<CR>
   \<CR>
   // ### Conditional\<CR>
@@ -139,6 +156,21 @@ Expect:
       item1
       item2
     ]
+
+
+  // ### Classes
+  // Indents members, including default and override
+  type MyBase() =
+    member _.Func1 x =
+      x + 1
+
+    default _.Func2 y =
+      y + 2
+
+
+  type MyDerived() =
+    override _.Func1 x =
+      x + 10
 
 
   // ### Conditional
