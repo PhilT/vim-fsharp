@@ -116,7 +116,7 @@ function! FSharpIndent()
     let indent = s:IndentPair('(', '', ')')
     Log '! dedent `)`: '.indent
 
-  elseif current_line =~ '^|$'
+  elseif current_line =~ '^|$\|^| .* ->$'
     Log '! start of match case or DU case'
     " Search for type, match and terminate on let
     let lnum = s:ScopedFind('^\s*\(type\|'
@@ -133,7 +133,7 @@ function! FSharpIndent()
     elseif line =~ '^\s*let'
       let indent = current_indent
     else
-      let indent = previous_line
+      let indent = previous_indent
     endif
 
   elseif current_line =~ '^|>$'

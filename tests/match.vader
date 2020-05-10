@@ -67,3 +67,13 @@ Expect:
     | _ -> nestedCatchAll
   | _ -> outerCatchAll
 
+Do (Line up match case with start of match):
+  i
+  match event with| match case ->\<Esc>F|
+  :doautocmd CursorMoved\<CR>
+  i\<CR>
+
+Expect:
+  match event with
+  | match case ->
+
