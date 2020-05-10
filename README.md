@@ -5,7 +5,7 @@
 ## Status
 
 * Indent: In-progress
-* Syntax: Copied from vim-ionide for now
+* Syntax: Copied from [ionide-vim](https://github.com/ionide/Ionide-vim) for now
 * Plugin: None
 
 This plugin is currently focused on providing better indent support in F#. It's
