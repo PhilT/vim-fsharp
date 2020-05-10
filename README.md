@@ -189,13 +189,18 @@ This also serves as a bit of a style guide.
 
 ## Development
 
+### Minimal `vimrc` for manual testing
+
+* For Neovim, run: `nvim -Nu tests/vimrc`
+* For Vim, run: `vim -Nu tests/vimrc`
+
 ### Running tests
 
 Run from either PowerShell or Bash.
 
 Syntax: `./test [-v] [-l] [testname]`
 
-* Run all tests in neovim - `./test`
-* Run a single test in vim - `./test -v let`
+* Run all tests in Neovim - `./test`
+* Run a single test in Vim - `./test -v let`
 * Run a single test with logging - `./test -l let`
 
