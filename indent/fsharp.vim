@@ -178,7 +178,7 @@ function! FSharpIndent()
     Log '! `|>` pipeline operator on current line'
     let indent = previous_indent
 
-  elseif current_line =~ '^\(elif .* then\|else\)$'
+  elseif current_line =~ '^\(elif\( .* then\)\?\|else\)$'
     Log '! `elif/else` on current line'
     if previous_line =~ '^\(if\|elif\)'
       let indent = previous_indent

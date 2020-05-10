@@ -1,7 +1,7 @@
 Param([Switch]$log, [Switch]$vim)
 $test = $args[0]
 
-$test = 'reformat'
+#$test = 'reformat'
 #$log = $true
 
 if ($vim) {
