@@ -4,13 +4,14 @@
 
 ## Status
 
-* Indent: In-progress
+* Indent: In-progress as of May 2020
 * Syntax: Copied from [ionide-vim](https://github.com/ionide/Ionide-vim) for now
 * Plugin: None
 
 This plugin is currently focused on providing better indent support in F#. It's
-currently incomplete (not all syntax is covered). If you'd like to see support
-for some keywords do raise an issue (or a PR! ;) and I'll add it.
+currently incomplete (not all syntax is covered). If you find any problems,
+raise an issue with some example code and providing it doesn't conflict with
+other rules, I'll add it.
 
 
 ## Why?
