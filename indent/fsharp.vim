@@ -26,6 +26,10 @@ else
   command! -nargs=1 Log echom
 endif
 
+let s:funcRegex = '^\s*\(let\|member\|default\|override\) .\+ =\s*$'
+let s:letClassRegex = '^\s*let .\+ .\+ =\s*$\|^\s*type .\+ =\s*$'
+let s:moduleRegex = '^\s*module .\+ =\s*$'
+
 function! s:TrimSpacesAndComments(line)
   let line = substitute(a:line, '\v(.*)\/\/.*', '\1', '')
   return substitute(line, '\v^\s*(.{-})\s*$', '\1', '')
@@ -152,7 +156,7 @@ function! FSharpIndent()
       let indent = previous_indent - width
     endif
 
-  elseif previous_line =~ '^\(let\|module\).*=$'
+  elseif previous_line =~ s:funcRegex.'\|'.s:moduleRegex
     Log '! let/module ='
     let indent = previous_indent + width
 
@@ -188,14 +192,14 @@ function! FSharpIndent()
 
   elseif (previous_lnum + 3) <= v:lnum
     Log '! two blank lines for end of function'
-    let lnum = s:ScopedFind('^\s*let \w\+ .\+ =\s*$', v:lnum, previous_indent)
+    let lnum = s:ScopedFind(s:letClassRegex, v:lnum, previous_indent)
     let indent = lnum == -1 ? 0 : indent(lnum)
 
   elseif (previous_lnum + 2) <= v:lnum
     Log '! one blank line for end of code block'
     let lnum = s:ScopedFind('^\s*\(if .* then\|'
           \ .'let \w\+ .\+ =\s*\|'
-          \ .'let .*=\s*\|'
+          \ .s:funcRegex.'\|'
           \ .').*\|'.
           \ '.*(fun .* ->$\)$',
           \ v:lnum, previous_indent)

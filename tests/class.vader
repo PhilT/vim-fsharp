@@ -1,0 +1,62 @@
+Given fsharp:
+Do (Classes end with 2 blank lines):
+  i
+  module MyModule =\<CR>
+  type MyBase() =\<CR>
+  member _.Func1 x = x + 1\<CR>
+  default _.Func2 y = y + 2\<CR>
+  \<CR>
+  \<CR>
+  type MyDerived() =\<CR>
+  override _.Func1 x = x + 10
+
+Expect:
+  module MyModule =
+    type MyBase() =
+      member _.Func1 x = x + 1
+      default _.Func2 y = y + 2
+
+
+    type MyDerived() =
+      override _.Func1 x = x + 10
+
+Do (Indent member functions including default and override):
+  i
+  module MyModule =\<CR>
+  type MyBase() =\<CR>
+  member _.Func1 x =\<CR>
+  x + 1\<CR>
+  \<CR>
+  default _.Func2 y =\<CR>
+  y + 2\<CR>
+  \<CR>
+  \<CR>
+  type MyDerived() =\<CR>
+  override _.Func1 x =\<CR>
+  x + 10
+
+Expect:
+  module MyModule =
+    type MyBase() =
+      member _.Func1 x =
+        x + 1
+
+      default _.Func2 y =
+        y + 2
+
+
+    type MyDerived() =
+      override _.Func1 x =
+        x + 10
+
+Do (Indent interface with):
+  i
+  type SomeClass(x: int, y: string) =\<CR>
+  interface IPrintable with\<CR>
+  member _.Print() = printfn "%d %s" x y
+
+Expect:
+  type SomeClass(x: int, y: string) =
+    interface IPrintable with
+      member _.Print() = printfn "%d %s" x y
+
