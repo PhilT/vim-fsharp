@@ -1,0 +1,84 @@
+Given fsharp:
+Do (Record type):
+  i
+  type SomeRecordType = {\<CR>
+  field1: string\<CR>
+  field2: int\<CR>
+  }
+
+Expect:
+  type SomeRecordType = {
+    field1: string
+    field2: int
+  }
+
+Do (Using a Record):
+  i
+  let someVar = {\<CR>
+  field1 = "something"\<CR>
+  field2 = 1\<CR>
+  }
+
+Expect:
+  let someVar = {
+    field1 = "something"
+    field2 = 1
+  }
+
+Do (Returning a Record):
+  i
+  let someFunc () =\<CR>
+  {\<CR>
+  field1 = "thing"\<CR>
+  }
+
+Expect:
+  let someFunc () =
+    {
+      field1 = "thing"
+    }
+
+Do (Copy and update):
+  i
+  { record with\<CR>
+  field1 = "filled"\<CR>
+  field2 = "mmmmm"\<CR>
+  }
+
+Expect:
+  { record with
+      field1 = "filled"
+      field2 = "mmmmm"
+  }
+
+Do (Copy and update alt):
+  i
+  let state = {\<CR>
+  record with\<CR>
+  field1 = "filled"\<CR>
+  field2 = "mmmmm"\<CR>
+  }
+
+Expect:
+  let state = {
+    record with
+      field1 = "filled"
+      field2 = "mmmmm"
+  }
+
+Do (Long field values):
+  i
+  let state = {\<CR>
+  record with\<CR>
+  field1 =\<CR>
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit"\<CR>
+  field2 = "mmmmm"\<CR>
+  }
+
+Expect:
+  let state = {
+    record with
+      field1 =
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+      field2 = "mmmmm"
+  }

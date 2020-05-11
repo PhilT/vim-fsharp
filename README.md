@@ -26,17 +26,28 @@ out a compromise.
 * Other plugins don't improve the basic syntax and indent behaviour and seem to
   have issues on Windows platforms
 
+
 ## Features
 
+* A lightweight indenter written in pure Vimscript.
 * Robust indentation support
 * 2 line breaks ends function
-* Reformating support (providing above 2 blank lines rule is followed)
+* Reformatting support (providing above 2 blank lines rule is followed). For
+  something full-featured, look at [Fantomas](https://github.com/fsprojects/fantomas)
 * Single line break ends let binding
 * Automated tests - Rules can be added without breaking existing functionality
 * Developed on Windows 10 with Neovim 0.4.3
 * Tested in Neovim 0.4.3 and Vim 8.2
 * Tested on Windows 10 and Ubuntu Linux 20.04
-* Pure Vimscript
+
+
+## Limitations
+
+This plugin probably doesn't support deeply nested code. Then
+again, you probably shouldn't be writing deeply nested code.
+Still, if you think you have a valid case, raise an issue and
+I'll be happy to take a look.
+
 
 ## Installation
 

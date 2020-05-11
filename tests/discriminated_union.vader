@@ -1,0 +1,12 @@
+Given fsharp:
+Do (Discriminated Union):
+  i
+  type SomeDU =\<CR>
+  | Type1 of string\<CR>
+  | Type2 of string
+
+Expect:
+  type SomeDU =
+    | Type1 of string
+    | Type2 of string
+

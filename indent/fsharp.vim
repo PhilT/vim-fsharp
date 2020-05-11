@@ -12,7 +12,7 @@ endif
 let b:did_indent = 1
 
 setlocal indentexpr=FSharpIndent()
-setlocal indentkeys+=0=\|,0=\|],0=when,0=elif,0=else,0=\|\>
+setlocal indentkeys+=0=\|,0=\|],0=when,0=elif,0=else,0=\|\>,==
 
 " Only define the function once
 if exists("*GetFsharpIndent")
@@ -32,6 +32,7 @@ let s:letClassRegex = '^\s*let .\+ .\+ =\s*$\|^\s*type .\+ =\s*$'
 let s:moduleRegex = '^\s*module .\+ =\s*$'
 let s:matchRegex = '\s*match .\+ with$'
 let s:matchCaseRegex = '^\s*| .\+ ->.*$'
+let s:recordRegex = '^\s*.\+ with$\|{$'
 
 function! s:TrimSpacesAndComments(line)
   let line = substitute(a:line, '\v(.*)\/\/.*', '\1', '')
@@ -186,8 +187,17 @@ function! FSharpIndent()
       let indent = previous_indent - s:width
     endif
 
-  elseif previous_line =~ s:funcRegex.'\|'.s:moduleRegex
-    Log '! let/module ='
+  elseif current_line =~ '^\s*\w\+ =$'
+    Log '! Potential field'
+    let lnum = s:ScopedFind(s:recordRegex.'\|'.s:matchRegex, v:lnum, previous_indent)
+    let line = lnum == -1 ? '' : getline(lnum)
+    if line !~ s:matchRegex
+      let indent = indent(lnum) + s:width
+      let indent += line =~ '^\s*{.\+ with$' ? s:width : 0
+    endif
+
+  elseif previous_line =~ '=\s*$'
+    Log '! let/module/member etc ='
     let indent = previous_indent + s:width
 
   elseif previous_line =~ '^\(let\|type\).*=\(\s\({\|[\|[|\)\)\?$'
@@ -208,6 +218,10 @@ function! FSharpIndent()
 
   elseif previous_line =~ '(fun\s.*->$'
     Log '! lambda'
+    let indent = previous_indent + s:width
+
+  elseif previous_line =~ '(\s*$'
+    Log '! parens'
     let indent = previous_indent + s:width
 
   elseif previous_line =~ '^|>$'

@@ -1,0 +1,15 @@
+Given fsharp:
+Do:
+  i
+  { record with\<CR>
+  someField = head :: (\<CR>
+  someReallyLongFunctionName with lots of params\<CR>
+  )\<CR>
+  }
+
+Expect:
+  { record with
+      someField = head :: (
+        someReallyLongFunctionName with lots of params
+      )
+  }
