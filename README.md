@@ -1,4 +1,4 @@
-# An Opinionated, Cross-platform F# Indent and Syntax plugin for Vim
+# Opinionated, Cross-platform F# Indent and Syntax For Vim
 
 [![Build Status](https://travis-ci.org/PhilT/vim-fs.svg?branch=master)](https://travis-ci.org/PhilT/vim-fs)
 
