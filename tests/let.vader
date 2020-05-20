@@ -85,3 +85,36 @@ Expect:
 
     state.actions
 
+Given fsharp:
+  let outerFunc state =
+    let innerFunc state =
+      some code
+
+
+  let secondOuterFunc firstArg (secondArg: string) thirdArg
+
+Do (Don't change indent when already outdented):
+  GA =
+
+Expect:
+  let outerFunc state =
+    let innerFunc state =
+      some code
+
+
+  let secondOuterFunc firstArg (secondArg: string) thirdArg =
+
+Given fsharp:
+Do (Single blank line keeps indent level):
+  i
+  let state =\<CR>
+  something\<CR>
+  \<CR>
+  let something = "thing"
+
+Expect:
+  let state =
+    something
+
+    let something = "thing"
+

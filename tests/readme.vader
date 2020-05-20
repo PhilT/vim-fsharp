@@ -24,15 +24,18 @@ Do:
   member _.Func1 x =\<CR>
   x + 1\<CR>
   \<CR>
+  \<CR>
   default _.Func2 y =\<CR>
   y + 2\<CR>
   \<CR>
   \<CR>
+  \<Backspace>
   type MyDerived() =\<CR>
   override _.Func1 x =\<CR>
   x + 10\<CR>
   \<CR>
   \<CR>
+  \<Backspace>
   // ### Conditional\<CR>
   let someFunc () =\<CR>
   if someCond then doThing\<CR>
@@ -45,8 +48,6 @@ Do:
   doAnotherThing\<CR>
   else\<CR>
   doSomethingElse\<CR>
-  \<CR>
-  // single blank line after if/else block to dedent\<CR>
   \<CR>
   \<CR>
   // ### Lamba (`fun`)\<CR>
@@ -90,19 +91,21 @@ Do:
   \<CR>
   // ### Module\<CR>
   module Example\<CR>
-  let func =\<CR>
+  let func () =\<CR>
   doSomething\<CR>
   \<CR>
+  \<CR>
   module Example =\<CR>
-  let func =\<CR>
+  let func () =\<CR>
   doSomething\<CR>
   \<CR>
   \<CR>
   // ### Pipelining\<CR>
-  let func =\<CR>
+  let func () =\<CR>
   doSomething\<CR>
   |> andAnotherThing\<CR>
   |> andOneMoreThing\<CR>
+  \<CR>
   \<CR>
   // Supports multiline pipeline expressions.\<CR>
   doSomething\<CR>
@@ -164,6 +167,7 @@ Expect:
     member _.Func1 x =
       x + 1
 
+
     default _.Func2 y =
       y + 2
 
@@ -185,8 +189,6 @@ Expect:
       doAnotherThing
     else
       doSomethingElse
-
-    // single blank line after if/else block to dedent
 
 
   // ### Lamba (`fun`)
@@ -230,54 +232,56 @@ Expect:
 
   // ### Module
   module Example
-  let func =
+  let func () =
     doSomething
 
+
   module Example =
-    let func =
+    let func () =
       doSomething
 
 
-  // ### Pipelining
-  let func =
+    // ### Pipelining
+    let func () =
+      doSomething
+      |> andAnotherThing
+      |> andOneMoreThing
+
+
+    // Supports multiline pipeline expressions.
     doSomething
-    |> andAnotherThing
-    |> andOneMoreThing
-
-  // Supports multiline pipeline expressions.
-  doSomething
-  |>
-    if condition then
-      doThis
-    else
-      doThat
+    |>
+      if condition then
+        doThis
+      else
+        doThat
 
 
-  // ### Type (Record, Discriminated Union)
-  type SomeRecord = {
-    Field1: int
-    Field2: string
-  }
+    // ### Type (Record, Discriminated Union)
+    type SomeRecord = {
+      Field1: int
+      Field2: string
+    }
 
-  let someFunc () =
-    {
+    let someFunc () =
+      {
+        Field1 = 1
+        Field2 = "something"
+      }
+
+
+    let someRecord = {
       Field1 = 1
       Field2 = "something"
     }
 
 
-  let someRecord = {
-    Field1 = 1
-    Field2 = "something"
-  }
+    { someRecord with
+        Field1 = 2
+    }
 
 
-  { someRecord with
-      Field1 = 2
-  }
-
-
-  let newRecord = {
-    someRecord with
-      Field1 = 3
-  }
+    let newRecord = {
+      someRecord with
+        Field1 = 3
+    }

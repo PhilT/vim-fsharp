@@ -33,16 +33,17 @@ Expect:
 
 Given fsharp:
   type MyBase() =
-  member _.Func1 x =
-  x + 1
+    member _.Func1 x =
+    x + 1
 
-  default _.Func2 y =
-  y + 2
+
+    default _.Func2 y =
+    y + 2
 
 
   type MyDerived() =
-  override _.Func1 x =
-  x + 10
+    override _.Func1 x =
+    x + 10
 
 Do:
   VG=
@@ -51,6 +52,7 @@ Expect:
   type MyBase() =
     member _.Func1 x =
       x + 1
+
 
     default _.Func2 y =
       y + 2
@@ -135,6 +137,7 @@ Given fsharp:
   let func =
   doSomething
 
+
   module Example =
   let func =
   doSomething
@@ -147,12 +150,13 @@ Expect:
   let func =
     doSomething
 
+
   module Example =
     let func =
       doSomething
 
 Given fsharp:
-  let func =
+  let func () =
   doSomething
   |> andAnotherThing
   |> andOneMoreThing
@@ -168,17 +172,17 @@ Do:
   VG=
 
 Expect:
-  let func =
+  let func () =
     doSomething
     |> andAnotherThing
     |> andOneMoreThing
 
-  doSomething
-  |>
-    if condition then
-      doThis
-    else
-      doThat
+    doSomething
+    |>
+      if condition then
+        doThis
+      else
+        doThat
 
 Given fsharp:
   type SomeRecord = {

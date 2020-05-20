@@ -20,6 +20,7 @@ Expect:
     type MyDerived() =
       override _.Func1 x = x + 10
 
+Given fsharp:
 Do (Indent member functions including default and override):
   i
   module MyModule =\<CR>
@@ -27,10 +28,12 @@ Do (Indent member functions including default and override):
   member _.Func1 x =\<CR>
   x + 1\<CR>
   \<CR>
+  \<CR>
   default _.Func2 y =\<CR>
   y + 2\<CR>
   \<CR>
   \<CR>
+  \<Backspace>
   type MyDerived() =\<CR>
   override _.Func1 x =\<CR>
   x + 10
@@ -41,6 +44,7 @@ Expect:
       member _.Func1 x =
         x + 1
 
+
       default _.Func2 y =
         y + 2
 
@@ -49,6 +53,7 @@ Expect:
       override _.Func1 x =
         x + 10
 
+Given fsharp:
 Do (Indent interface with):
   i
   type SomeClass(x: int, y: string) =\<CR>

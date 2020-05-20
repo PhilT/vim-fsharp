@@ -28,7 +28,8 @@ endif
 
 let s:width = shiftwidth() " FIXME This might not work if shiftwidth is changed
 let s:funcRegex = '^\s*\(let\|member\|default\|override\) .\+ =\s*$'
-let s:letClassRegex = '^\s*let .\+ .\+ =\s*$\|^\s*type .\+ =\s*$'
+let s:classRegex = '^\s*type .\+ =\s*$'
+let s:letClassRegex = s:funcRegex.'\|'.s:classRegex
 let s:moduleRegex = '^\s*module .\+ =\s*$'
 let s:matchRegex = '\s*match .\+ with$'
 let s:matchCaseRegex = '^\s*| .\+ ->.*$'
@@ -47,18 +48,22 @@ function! s:ScopedFind(regex, start_line, scope)
   let in_comment = 0
   let blank_lines = 0
 
+  Log 'ScopedFind scope is '.a:scope
+
   " This loop terminates when a line matches the regex,
   " we reach the top of the file,
   " or we go out of function scope (2 blank lines)
+  " In addition, it ignores lines that are indented further
   while lnum >= 0 && blank_lines < 2 && (
         \ in_comment || line == "" || indent > max_indent ||
         \ line !~ a:regex
         \ )
-    Log 'lnum:'.lnum.', indent:'.indent.', min_indent:'.min_indent.', max_indent:'.max_indent
-    Log 'in_comment:'.in_comment.', line:'.line
     let lnum -= 1
     let line = getline(lnum)
     let indent = indent(lnum)
+
+    Log 'lnum:'.lnum.', indent:'.indent.', min_indent:'.min_indent.', max_indent:'.max_indent
+    Log 'in_comment:'.in_comment.', line:'.line
 
     " Indicate if we are in a multiline comment
     if line =~ '*)$'
@@ -74,6 +79,7 @@ function! s:ScopedFind(regex, start_line, scope)
     endif
   endwhile
 
+  Log 'Blank lines '.blank_lines
   Log 'ScopedFind matched on line '.lnum.': ['.line.']'
   return line =~ a:regex ? lnum : -1
 endfunction
@@ -191,7 +197,7 @@ function! FSharpIndent()
     Log '! Potential field'
     let lnum = s:ScopedFind(s:recordRegex.'\|'.s:matchRegex, v:lnum, previous_indent)
     let line = lnum == -1 ? '' : getline(lnum)
-    if line !~ s:matchRegex
+    if line !~ s:matchRegex && lnum != -1
       let indent = indent(lnum) + s:width
       let indent += line =~ '^\s*{.\+ with$' ? s:width : 0
     endif
@@ -230,24 +236,11 @@ function! FSharpIndent()
 
   elseif (previous_lnum + 3) <= v:lnum
     Log '! two blank lines for end of function'
-    let lnum = s:ScopedFind(s:letClassRegex, v:lnum, previous_indent)
-    let indent = lnum == -1 ? 0 : indent(lnum)
-
-  elseif (previous_lnum + 2) <= v:lnum
-    Log '! one blank line for end of code block'
-    let lnum = s:ScopedFind('^\s*\(if .* then\|'
-          \ .'let \w\+ .\+ =\s*\|'
-          \ .s:funcRegex.'\|'
-          \ .').*\|'.
-          \ '.*(fun .* ->$\)$',
-          \ v:lnum, previous_indent)
-    let line = lnum == -1 ? "" : getline(lnum)
-
-    if lnum != -1
-      let indent = indent(lnum)
-      if line =~ '^\s*let \w\+ .\+ =\s*\|(fun .* ->$'
-        let indent += s:width
-      endif
+    if current_line == ''
+      let lnum = s:ScopedFind(s:letClassRegex, v:lnum, previous_indent)
+      let indent = lnum == -1 ? 0 : indent(lnum)
+    else
+      let indent = current_indent
     endif
 
   elseif previous_line =~ '^\s*\(if\|elif\) .* then$'

@@ -38,7 +38,7 @@ Given fsharp:
   else
     doSomethingElse
 
-Do (dedents after blank line):
+Do (Keeps indent after blank line):
   Go
   \<CR>
   some other code
@@ -51,7 +51,7 @@ Expect:
   else
     doSomethingElse
 
-  some other code
+    some other code
 
 Given fsharp:
 Do (with parentheses):

@@ -28,3 +28,24 @@ Expect:
       doSomething
 
 
+Do (Keeps indent level):
+  i
+  module Example =\<CR>
+  \<CR>
+  let someFunc () = doSomething\<CR>
+  \<CR>
+  \<CR>
+  module AnotherExample =\<CR>
+  let anotherFunc () = doOtherThing
+
+
+Expect:
+  module Example =
+
+    let someFunc () = doSomething
+
+
+  module AnotherExample =
+    let anotherFunc () = doOtherThing
+
+
