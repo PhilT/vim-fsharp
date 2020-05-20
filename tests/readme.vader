@@ -95,7 +95,7 @@ Do:
   doSomething\<CR>
   \<CR>
   \<CR>
-  module Example =\<CR>
+  module ThisWillContainTheRestOfTheCode =\<CR>
   let func () =\<CR>
   doSomething\<CR>
   \<CR>
@@ -236,7 +236,7 @@ Expect:
     doSomething
 
 
-  module Example =
+  module ThisWillContainTheRestOfTheCode =
     let func () =
       doSomething
 

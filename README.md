@@ -90,6 +90,7 @@ This also serves as a bit of a style guide.
     member _.Func1 x =
       x + 1
 
+
     default _.Func2 y =
       y + 2
 
@@ -111,8 +112,6 @@ This also serves as a bit of a style guide.
       doAnotherThing
     else
       doSomethingElse
-
-    // single blank line after if/else block to dedent
 
 
   // ### Lamba (`fun`)
@@ -156,57 +155,59 @@ This also serves as a bit of a style guide.
 
   // ### Module
   module Example
-  let func =
+  let func () =
     doSomething
 
-  module Example =
-    let func =
+
+  module ThisWillContainTheRestOfTheCode =
+    let func () =
       doSomething
 
 
-  // ### Pipelining
-  let func =
+    // ### Pipelining
+    let func () =
+      doSomething
+      |> andAnotherThing
+      |> andOneMoreThing
+
+
+    // Supports multiline pipeline expressions.
     doSomething
-    |> andAnotherThing
-    |> andOneMoreThing
-
-  // Supports multiline pipeline expressions.
-  doSomething
-  |>
-    if condition then
-      doThis
-    else
-      doThat
+    |>
+      if condition then
+        doThis
+      else
+        doThat
 
 
-  // ### Type (Record, Discriminated Union)
-  type SomeRecord = {
-    Field1: int
-    Field2: string
-  }
+    // ### Type (Record, Discriminated Union)
+    type SomeRecord = {
+      Field1: int
+      Field2: string
+    }
 
-  let someFunc () =
-    {
+    let someFunc () =
+      {
+        Field1 = 1
+        Field2 = "something"
+      }
+
+
+    let someRecord = {
       Field1 = 1
       Field2 = "something"
     }
 
 
-  let someRecord = {
-    Field1 = 1
-    Field2 = "something"
-  }
+    { someRecord with
+        Field1 = 2
+    }
 
 
-  { someRecord with
-      Field1 = 2
-  }
-
-
-  let newRecord = {
-    someRecord with
-      Field1 = 3
-  }
+    let newRecord = {
+      someRecord with
+        Field1 = 3
+    }
 ```
 
 
