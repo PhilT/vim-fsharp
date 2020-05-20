@@ -26,3 +26,16 @@ Expect:
       item1
       item2
     ]
+
+Do (Passing a list to a function):
+  i
+  testList "some test" [\<CR>
+  item1\<CR>
+  item2\<CR>
+  ]
+
+Expect:
+  testList "some test" [
+    item1
+    item2
+  ]

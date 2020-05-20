@@ -210,7 +210,7 @@ function! FSharpIndent()
     Log '! type/record/array/list'
     let indent = previous_indent + s:width
 
-  elseif previous_line =~ '^\([\|[|\|{\|[{\|(\)$'
+  elseif previous_line =~ '\([\|[|\|{\|[{\|(\)$'
     Log '! list/record/tuple'
     let indent = previous_indent + s:width
 
