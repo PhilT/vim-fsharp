@@ -31,14 +31,6 @@ syn keyword  fsharpScript contained line error warning light nowarn
 syn keyword  fsharpScript contained I load r time
 
 
-" comments
-syn match    fsharpSingleLineComment "//.*$" contains=fsharpTodo,@Spell
-syn region   fsharpDocComment start="///" end="$" contains=fsharpTodo,fsharpXml,@Spell keepend oneline
-syn region   fsharpXml matchgroup=fsharpXmlDoc start="<[^>]\+>" end="</[^>]\+>" contained contains=fsharpXml,@Spell
-syn region   fsharpMultiLineComment start='(\*' end='\*)' contains=fsharpTodo,@Spell
-syn keyword  fsharpTodo contained TODO FIXME XXX NOTE
-
-
 " Double-backtick identifiers
 syn region   fsharpDoubleBacktick start="``" end="``" keepend oneline
 
@@ -66,6 +58,14 @@ syn region   fsharpEncl transparent matchgroup=fsharpKeyword start="(" matchgrou
 syn region   fsharpEncl transparent matchgroup=fsharpKeyword start="{" matchgroup=fsharpKeyword end="}"  contains=ALLBUT,fsharpBraceErr,fsharpScript
 syn region   fsharpEncl transparent matchgroup=fsharpKeyword start="\[" matchgroup=fsharpKeyword end="\]" contains=ALLBUT,fsharpBrackErr,fsharpScript
 syn region   fsharpEncl transparent matchgroup=fsharpKeyword start="\[|" matchgroup=fsharpKeyword end="|\]" contains=ALLBUT,fsharpArrErr,fsharpScript
+
+
+" comments
+syn keyword  fsharpTodo contained TODO FIXME XXX NOTE
+syn match    fsharpSingleLineComment "//.*$" contains=fsharpTodo,@Spell
+syn region   fsharpDocComment start="///" end="$" contains=fsharpTodo,fsharpXml,@Spell keepend oneline
+syn region   fsharpXml matchgroup=fsharpXmlDoc start="<[^>]\+>" end="</[^>]\+>" contained contains=fsharpXml,@Spell
+syn region   fsharpMultiLineComment start="(\*" end="\*)" contains=fsharpTodo,@Spell
 
 
 " keywords
@@ -197,6 +197,7 @@ syn region   fsharpAttrib matchgroup=fsharpAttribute start="\[<" end=">]"
 " regions
 syn region   fsharpRegion matchgroup=fsharpPreCondit start="\%(end\)\@<!region.*$"
             \ end="endregion" fold contains=ALL contained
+
 
 if version >= 508 || !exists("did_fs_syntax_inits")
     if version < 508
