@@ -257,6 +257,10 @@ function! FSharpIndent()
     Log '! if/elif then'
     let indent = previous_indent + s:width
 
+  elseif previous_line =~ '\sdo$'
+    Log '! while/for do'
+    let indent = previous_indent + s:width
+
   else
     Log '- keep indent of previous line'
     Log 'line matched ['.line.']'

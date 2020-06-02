@@ -1,0 +1,22 @@
+Given fsharp:
+Do (for ... do):
+  i
+  let someFunc () =\<CR>
+  for i = 1 to 10 do\<CR>
+  printf "%d " i\<CR>
+  \<CR>
+  \<CR>
+  let otherFunc () =\<CR>
+  for i = 10 downto 1 do\<CR>
+  printf "%d " i
+
+Expect:
+  let someFunc () =
+    for i = 1 to 10 do
+      printf "%d " i
+
+
+  let otherFunc () =
+    for i = 10 downto 1 do
+      printf "%d " i
+
