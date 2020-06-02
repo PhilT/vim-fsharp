@@ -4,7 +4,7 @@
 
 ## Status
 
-* **Indent:** Mostly complete as of May 2020
+* **Indent:** Mostly complete as of June 2020 (See issues)
 * **Syntax:** Copied from [ionide-vim](https://github.com/ionide/Ionide-vim)
   with some minor fixes
 * **Plugin:** None
@@ -34,7 +34,6 @@ out a compromise.
 * 2 line breaks ends function
 * Reformatting support (providing above 2 blank lines rule is followed). For
   something full-featured, look at [Fantomas](https://github.com/fsprojects/fantomas)
-* Single line break ends let binding
 * Automated tests - Rules can be added without breaking existing functionality
 * Developed on Windows 10 with Neovim 0.4.3
 * Tested in Neovim 0.4.3 and Vim 8.2
@@ -112,6 +111,16 @@ This also serves as a bit of a style guide.
       doAnotherThing
     else
       doSomethingElse
+
+
+  // ### Exceptions
+  let handleExceptions func args =
+    try
+      func args
+      someOtherStuff
+    with
+      | MyException(str) -> printfn "MyError: %s" str
+      | MyTupleException(str, i) -> printfn "MyTupleError: %s, %d" str i
 
 
   // ### Lamba (`fun`)
@@ -227,9 +236,10 @@ This also serves as a bit of a style guide.
 2. Add the minimal code to get it working
 3. Refactor
 4. Repeat steps 1-3 as required
-5. Add to `tests/integration.vader`
-6. Add to `README.md`
-7. Add to `tests/readme.vader`
+5. Add to `tests/integration.vader` [optional]
+6. Add to `tests/readme.vader`
+7. Add to `README.md`
+8. Add to `tests/reformat.vader`
 
 ### Minimal `vimrc` for manual testing
 

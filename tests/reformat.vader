@@ -254,3 +254,23 @@ Expect:
       Field1 = 3
   }
 
+Given fsharp:
+  let handleExceptions func args =
+  try
+  func args
+  someOtherStuff
+  with
+  | MyException(str) -> printfn "MyError: %s" str
+  | MyTupleException(str, i) -> printfn "MyTupleError: %s, %d" str i
+
+Do:
+  VG=
+
+Expect:
+  let handleExceptions func args =
+    try
+      func args
+      someOtherStuff
+    with
+      | MyException(str) -> printfn "MyError: %s" str
+      | MyTupleException(str, i) -> printfn "MyTupleError: %s, %d" str i

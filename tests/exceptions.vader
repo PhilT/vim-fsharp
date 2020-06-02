@@ -1,0 +1,19 @@
+Given fsharp:
+Do (try with):
+  i
+  let handleExceptions func args =\<CR>
+  try\<CR>
+  func args\<CR>
+  someOtherStuff\<CR>
+  with\<CR>
+  | MyException(str) -> printfn "MyError: %s" str\<CR>
+  | MyTupleException(str, i) -> printfn "MyTupleError: %s, %d" str i
+
+Expect:
+  let handleExceptions func args =
+    try
+      func args
+      someOtherStuff
+    with
+      | MyException(str) -> printfn "MyError: %s" str
+      | MyTupleException(str, i) -> printfn "MyTupleError: %s, %d" str i

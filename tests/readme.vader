@@ -50,6 +50,16 @@ Do:
   doSomethingElse\<CR>
   \<CR>
   \<CR>
+  // ### Exceptions\<CR>
+  let handleExceptions func args =\<CR>
+  try\<CR>
+  func args\<CR>
+  someOtherStuff\<CR>
+  with\<CR>
+  | MyException(str) -> printfn "MyError: %s" str\<CR>
+  | MyTupleException(str, i) -> printfn "MyTupleError: %s, %d" str i\<CR>
+  \<CR>
+  \<CR>
   // ### Lamba (`fun`)\<CR>
   // Also supports auto-pairs\<CR>
   List.map (fun x ->\<CR>
@@ -189,6 +199,16 @@ Expect:
       doAnotherThing
     else
       doSomethingElse
+
+
+  // ### Exceptions
+  let handleExceptions func args =
+    try
+      func args
+      someOtherStuff
+    with
+      | MyException(str) -> printfn "MyError: %s" str
+      | MyTupleException(str, i) -> printfn "MyTupleError: %s, %d" str i
 
 
   // ### Lamba (`fun`)

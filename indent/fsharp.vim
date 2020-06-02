@@ -12,7 +12,7 @@ endif
 let b:did_indent = 1
 
 setlocal indentexpr=FSharpIndent()
-setlocal indentkeys+=0=\|,0=\|],0=when,0=elif,0=else,0=\|\>,==
+setlocal indentkeys+=0=\|,0=\|],0=when,0=elif,0=else,0=\|\>,==,=with
 
 " Only define the function once
 if exists("*GetFsharpIndent")
@@ -201,6 +201,15 @@ function! FSharpIndent()
       let indent = indent(lnum) + s:width
       let indent += line =~ '^\s*{.\+ with$' ? s:width : 0
     endif
+
+
+  elseif current_line =~ '^\s*\with$'
+    Log '! with'
+    let indent = previous_indent - s:width
+
+  elseif previous_line =~ '^\s*\(try\|with\)$'
+    Log '! try/with'
+    let indent = previous_indent + s:width
 
   elseif previous_line =~ '=\s*$'
     Log '! let/module/member etc ='
