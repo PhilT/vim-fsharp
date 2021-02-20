@@ -1,7 +1,5 @@
 # Opinionated, Cross-platform, Tested F# Indent and Syntax For Vim
 
-[![Build Status](https://travis-ci.org/PhilT/vim-fsharp.svg?branch=master)](https://travis-ci.org/PhilT/vim-fsharp)
-
 ## Status
 
 * **Indent:** Working
