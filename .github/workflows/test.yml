@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-test:
+  test:
     name: Test on Neovim ${{ matrix.neovim }} ${{ matrix.version }}
     runs-on: ubuntu-latest
     strategy:

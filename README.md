@@ -1,5 +1,7 @@
 # Opinionated, Cross-platform, Tested F# Indent and Syntax For Vim
 
+![tests](https://github.com/PhilT/vim-fsharp/actions/workflows/test/badge.svg)
+
 ## Status
 
 * **Indent:** Working
