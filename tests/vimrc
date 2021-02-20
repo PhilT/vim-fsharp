@@ -1,5 +1,5 @@
 filetype off
-set rtp+=$XDG_CONFIG_HOME/nvim/plugged/vader.vim
+set rtp+=$GITHUB_WORKSPACE/vader.vim
 let &rtp.=','.expand('%:p:h')
 set shiftwidth=2
 set backspace=2
