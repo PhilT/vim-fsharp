@@ -1,13 +1,13 @@
-# Opinionated, Cross-platform F# Indent and Syntax For Vim
+# Opinionated, Cross-platform, Tested F# Indent and Syntax For Vim
 
-[![Build Status](https://travis-ci.org/PhilT/vim-fs.svg?branch=master)](https://travis-ci.org/PhilT/vim-fs)
+[![Build Status](https://travis-ci.org/PhilT/vim-fsharp.svg?branch=master)](https://travis-ci.org/PhilT/vim-fsharp)
 
 ## Status
 
-* **Indent:** Mostly complete as of June 2020 (See issues)
+* **Indent:** Working
 * **Syntax:** Copied from [ionide-vim](https://github.com/ionide/Ionide-vim)
   with some minor fixes
-* **Plugin:** None
+* **Plugin:** None (I recommend Neovim 0.5 with [FsAutoComplete](https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#fsautocomplete))
 
 This plugin is currently focused on providing better indent support in F#.
 If you find any problems, raise an issue with some example code and providing
@@ -20,8 +20,8 @@ out a compromise.
 * [vim-fsharp](https://github.com/fsharp/vim-fsharp) hasn't been touched in a
   couple of years and `indent/` is 4 years old. It appears to have been
   abandoned.
-* Language features can be more easily provided by an LSP (e.g.
-  [coc-fsharp](https://github.com/coc-extensions/coc-fsharp))
+* Language features can be provided by an LSP (e.g. Neovim 0.5's [built-in LSP client](https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#fsautocomplete)
+  or [coc-fsharp](https://github.com/coc-extensions/coc-fsharp))
 * Enhancements to indent rules can provide a better experience
 * Other plugins don't improve the basic syntax and indent behaviour and seem to
   have issues on Windows platforms
@@ -34,9 +34,10 @@ out a compromise.
 * 2 line breaks ends function
 * Reformatting support (providing above 2 blank lines rule is followed). For
   something full-featured, look at [Fantomas](https://github.com/fsprojects/fantomas)
+  also included in [FsAutoComplete](https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#fsautocomplete)
 * Automated tests - Rules can be added without breaking existing functionality
-* Developed on Windows 10 with Neovim 0.4.3
-* Tested in Neovim 0.4.3 and Vim 8.2
+* Developed on Windows 10 with Neovim 0.4.3 and 0.5 Nightly
+* Tested in Neovim 0.4.3 and 0.5 Nightly and Vim 8.2
 * Tested on Windows 10 and Ubuntu Linux 20.04
 
 
@@ -50,14 +51,20 @@ I'll be happy to take a look.
 
 ## Installation
 
-Use your plugin manager. I use [vim-plug](https://github.com/junegunn/vim-plug)
+Add to your plugin manager:
 
+[vim-plug](https://github.com/junegunn/vim-plug)
 ```
-Plug 'PhilT/vim-fs'
+Plug 'PhilT/vim-fsharp'
+```
+
+[Paq](https://github.com/savq/paq-nvim)
+```lua
+paq {'PhilT/vim-fsharp'}
 ```
 
 If you use [vim-polyglot](https://github.com/sheerun/vim-polyglot) be sure to
-load **vim-fs** before it or `let g:polyglot_disabled = ['fsharp']` before
+load **vim-fsharp** before it or `let g:polyglot_disabled = ['fsharp']` before
 loading plugins.
 
 
