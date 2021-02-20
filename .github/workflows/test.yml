@@ -10,22 +10,18 @@ on:
 
 jobs:
   test:
-    name: Test on Neovim ${{ matrix.neovim }} ${{ matrix.version }}
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        neovim: [false, true]
-        version: ['stable', 'nightly']
-
     steps:
     - uses: actions/checkout@v2
-    - name: Use Neovim? ${{ matrix.neovim }}
+
+    - name: Use Neovim
       uses: rhysd/action-setup-vim@v1
       with:
-        neovim: ${{ matrix.neovim }}
-        version: ${{ matrix.version }}
+        version: stable
+        neovim: true
     
     - name: Run tests
       uses: PsychoLlama/vader-action@v1
       with:
-        neovim: ${{ matrix.neovim }}
+        neovim: true
+
