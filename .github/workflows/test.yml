@@ -10,19 +10,19 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
         version: ["stable", "nightly"]
-        neovim: [false, true]
+        name: ["Vim", "Neovim"]
         include:
-          - neovim: false
+          - name: "Vim"
+            neovim: false
             exe: "vim"
-            name: "Vim"
-          - neovim: true
+          - name: "Neovim"
+            neovim: true
             exe: "nvim"
-            name: "Neovim"
 
     steps:
     - uses: actions/checkout@v2
