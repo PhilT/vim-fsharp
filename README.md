@@ -1,4 +1,4 @@
-# Opinionated, Cross-platform, Tested F# Indent and Syntax For Vim
+# Cross-platform, Tested F# Indent and Syntax For Vim
 
 ![tests](https://github.com/PhilT/vim-fsharp/actions/workflows/test.yml/badge.svg)
 
@@ -10,16 +10,15 @@
 * **Plugin:** None (I recommend Neovim 0.5 with [FsAutoComplete](https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#fsautocomplete))
 
 This plugin is currently focused on providing better indent support in F#.
-If you find any problems, raise an issue with some example code and providing
-it doesn't conflict with other rules, I'll add it. Otherwise, we'll have to work
-out a compromise.
+If you find any problems, raise an issue and we'll work out a solution
+together.
 
 
 ## Why?
 
-* [vim-fsharp](https://github.com/fsharp/vim-fsharp) hasn't been touched in a
-  couple of years and `indent/` is 4 years old. It appears to have been
-  abandoned.
+* [vim-fsharp](https://github.com/fsharp/vim-fsharp) hasn't been updated for a
+  few years and also contains old versions of FsAutoComplete which don't really
+  work (at least for my setup)
 * Language features can be provided by an LSP (e.g. Neovim 0.5's [built-in LSP client](https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#fsautocomplete)
   or [coc-fsharp](https://github.com/coc-extensions/coc-fsharp))
 * Enhancements to indent rules can provide a better experience
@@ -43,6 +42,18 @@ out a compromise.
 
 ## Limitations
 
+This plugin is tested with the following vim settings:
+
+```vim
+set shiftwidth=2
+set backspace=2
+set tabstop=2
+set softtabstop=2
+set expandtab
+filetype plugin indent on
+syntax enable
+```
+
 This plugin probably doesn't support deeply nested code. Then
 again, you probably shouldn't be writing deeply nested code.
 Still, if you think you have a valid case, raise an issue and
@@ -58,7 +69,7 @@ Add to your plugin manager:
 Plug 'PhilT/vim-fsharp'
 ```
 
-[Paq](https://github.com/savq/paq-nvim)
+[Paq](https://github.com/savq/paq-nvim) (Neovim Lua)
 ```lua
 paq {'PhilT/vim-fsharp'}
 ```
@@ -66,6 +77,17 @@ paq {'PhilT/vim-fsharp'}
 If you use [vim-polyglot](https://github.com/sheerun/vim-polyglot) be sure to
 load **vim-fsharp** before it or `let g:polyglot_disabled = ['fsharp']` before
 loading plugins.
+
+## Works with
+
+Neovim 0.5's LSP client. This built-in client in the development version of
+Neovim is currently usable and with nvim-lspconfig provides out of the box
+support for many languages. I've just added support for F# using the awesome 
+FsAutoComplete library.
+
+* [Neovim 0.5](https://github.com/neovim/neovim)
+* [F# plug in nvim-lspconfig](https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#fsautocomplete)
+* [FsAutoComplete](https://github.com/fsharp/FsAutoComplete)
 
 
 ## A list of indent rules

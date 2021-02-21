@@ -1,5 +1,5 @@
 " Vim indent file
-" Language:     FSharp
+" Language:     F#
 " Maintainer:   Phil Thompson        <phil@electricvisions.com>
 " Created:      2020 May 04
 " Last Change:

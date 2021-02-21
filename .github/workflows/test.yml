@@ -11,19 +11,32 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - neovim: false
+            exe: "vim"
+            name: "Vim"
+          - neovim: true
+            exe: "nvim"
+            name: "Neovim"
+        version: ["stable", "nightly"]
+
     steps:
     - uses: actions/checkout@v2
 
-    - name: Use Neovim
+    - name: Install ${{ matrix.name }}
       uses: rhysd/action-setup-vim@v1
       with:
-        version: stable
-        neovim: true
+        version: ${{ matrix.version }}
+        neovim: ${{ matrix.neovim }}
 
     - uses: actions/checkout@v2
       with:
         repository: junegunn/vader.vim
         path: vader.vim
     - name: Run tests
-      run: nvim -Es -Nu tests/vimrc -c "set rtp+=vader.vim" -c "Vader! tests/*" > /dev/null
+      env:
+        EXE: ${{ matrix.exe }}
+      run: ${EXE} -Es -Nu tests/vimrc -c "set rtp+=vader.vim" -c "Vader! tests/*" > /dev/null
 
