@@ -12,6 +12,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         version: ["stable", "nightly"]
         neovim: [false, true]
@@ -39,5 +40,5 @@ jobs:
     - name: Run tests
       env:
         EXE: ${{ matrix.exe }}
-      run: ${EXE} -Es -Nu tests/vimrc -c "set rtp+=vader.vim" -c "Vader! tests/*" > /dev/null
+      run: ${EXE} -Es -Nu tests/vimrc -c "Vader! tests/*" > /dev/null
 

@@ -1,5 +1,5 @@
 filetype off
-set rtp+=$GITHUB_WORKSPACE/vader.vim
+set rtp+=vader.vim
 let &rtp.=','.expand('%:p:h')
 set shiftwidth=2
 set backspace=2
