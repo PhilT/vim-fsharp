@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        version: ["stable", "nightly"]
+        neovim: [false, true]
         include:
           - neovim: false
             exe: "vim"
@@ -20,7 +22,6 @@ jobs:
           - neovim: true
             exe: "nvim"
             name: "Neovim"
-        version: ["stable", "nightly"]
 
     steps:
     - uses: actions/checkout@v2
