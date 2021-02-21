@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-vimcmd=nvim
+vimcmd="nvim --clean"
 verbose=""
 
 while getopts ":vl" opt; do

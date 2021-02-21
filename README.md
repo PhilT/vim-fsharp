@@ -35,9 +35,9 @@ together.
   something full-featured, look at [Fantomas](https://github.com/fsprojects/fantomas)
   also included in [FsAutoComplete](https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#fsautocomplete)
 * Automated tests - Rules can be added without breaking existing functionality
-* Developed on Windows 10 with Neovim 0.4.3 and 0.5 Nightly
-* Tested in Neovim 0.4.3 and 0.5 Nightly and Vim 8.2
-* Tested on Windows 10 and Ubuntu Linux 20.04
+* Developed on Windows 10 and Ubuntu 20.04 with Neovim 0.5 nightly
+* Tested in Vim and Neovim stable and nightly
+* Tested on Windows 10 and Ubuntu 20.04
 
 
 ## Limitations
@@ -276,6 +276,8 @@ This also serves as a bit of a style guide.
 * For Vim, run: `vim -Nu tests/vimrc`
 
 ### Running tests
+
+Install vader-vim with `./install-vader`.
 
 Run from either PowerShell or Bash.
 
