@@ -19,10 +19,10 @@ jobs:
         include:
           - name: "Vim"
             neovim: false
-            exe: "vim"
+            options: "-v"
           - name: "Neovim"
             neovim: true
-            exe: "nvim"
+            options: ""
 
     steps:
     - uses: actions/checkout@v2
@@ -39,6 +39,6 @@ jobs:
         path: vader.vim
     - name: Run tests
       env:
-        EXE: ${{ matrix.exe }}
-      run: ${EXE} -Es -Nu tests/vimrc -c "Vader! tests/*" > /dev/null
+        OPTIONS: ${{ matrix.options }}
+      run: ./test $OPTIONS
 
