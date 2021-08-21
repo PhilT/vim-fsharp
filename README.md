@@ -80,8 +80,7 @@ loading plugins.
 
 ## Works with
 
-Neovim 0.5's LSP client. This built-in client in the development version of
-Neovim is currently usable and with nvim-lspconfig provides out of the box
+Neovim 0.5's LSP client with nvim-lspconfig provides out of the box
 support for many languages. I've just added support for F# using the awesome 
 FsAutoComplete library.
 
