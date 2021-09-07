@@ -30,13 +30,13 @@ together.
 
 * A lightweight indenter written in pure Vimscript.
 * Robust indentation support
-* 2 line breaks ends function
+* 2 line-breaks end function
 * Reformatting support (providing above 2 blank lines rule is followed). For
   something full-featured, look at [Fantomas](https://github.com/fsprojects/fantomas)
   also included in [FsAutoComplete](https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#fsautocomplete)
 * Automated tests - Rules can be added without breaking existing functionality
-* Developed on Windows 10 and Ubuntu 20.04 with Neovim 0.5 nightly
-* Tested in Vim and Neovim stable and nightly
+* Developed on Windows 10 and Ubuntu 20.04 with Neovim 0.5
+* Tested in Vim and Neovim stable and nightly (Neovim nightly is not currently building at present so nightly builds are disabled for now)
 * Tested on Windows 10 and Ubuntu 20.04
 
 
@@ -81,7 +81,7 @@ loading plugins.
 ## Works with
 
 Neovim 0.5's LSP client with nvim-lspconfig provides out of the box
-support for many languages. I've just added support for F# using the awesome 
+support for many languages. I've just added support for F# using the awesome
 FsAutoComplete library.
 
 * [Neovim 0.5](https://github.com/neovim/neovim)
