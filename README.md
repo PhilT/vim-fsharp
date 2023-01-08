@@ -5,9 +5,9 @@
 ## Status
 
 * **Indent:** Working
-* **Syntax:** Copied from [ionide-vim](https://github.com/ionide/Ionide-vim)
+* **Syntax:** Modified from [ionide-vim](https://github.com/ionide/Ionide-vim)
   with some minor fixes
-* **Plugin:** None (I recommend Neovim 0.5 with [FsAutoComplete](https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#fsautocomplete))
+* **Plugin:** None (I recommend Neovim 0.8 with [FsAutoComplete](https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#fsautocomplete))
 
 This plugin is currently focused on providing better indent support in F#.
 If you find any problems, raise an issue and we'll work out a solution
@@ -19,7 +19,7 @@ together.
 * [vim-fsharp](https://github.com/fsharp/vim-fsharp) hasn't been updated for a
   few years and also contains old versions of FsAutoComplete which don't really
   work (at least for my setup)
-* Language features can be provided by an LSP (e.g. Neovim 0.5's [built-in LSP client](https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#fsautocomplete)
+* Language features can be provided by an LSP (e.g. Neovim 0.8's [built-in LSP client](https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#fsautocomplete)
   or [coc-fsharp](https://github.com/coc-extensions/coc-fsharp))
 * Enhancements to indent rules can provide a better experience
 * Other plugins don't improve the basic syntax and indent behaviour and seem to
@@ -35,12 +35,15 @@ together.
   something full-featured, look at [Fantomas](https://github.com/fsprojects/fantomas)
   also included in [FsAutoComplete](https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#fsautocomplete)
 * Automated tests - Rules can be added without breaking existing functionality
-* Developed on Windows 10 and Ubuntu 20.04 with Neovim 0.5
-* Tested in Vim and Neovim stable and nightly (Neovim nightly is not currently building at present so nightly builds are disabled for now)
-* Tested on Windows 10 and Ubuntu 20.04
+* Developed on Windows 10/11 and Ubuntu 20.04 with Neovim 0.8
+* Tested in Vim and Neovim stable (Neovim nightly should okay too)
+* Tested on Windows 10/11 and Ubuntu 20.04
 
 
 ## Limitations
+
+Sometimes the indenter won't immediately indent something (e.g. record keys).
+Just keep typing and it should figure out what you want to do.
 
 This plugin is tested with the following vim settings:
 
@@ -80,11 +83,11 @@ loading plugins.
 
 ## Works with
 
-Neovim 0.5's LSP client with nvim-lspconfig provides out of the box
+Neovim 0.8's LSP client with nvim-lspconfig provides out of the box
 support for many languages. I've just added support for F# using the awesome
 FsAutoComplete library.
 
-* [Neovim 0.5](https://github.com/neovim/neovim)
+* [Neovim 0.8](https://github.com/neovim/neovim)
 * [F# plug in nvim-lspconfig](https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#fsautocomplete)
 * [FsAutoComplete](https://github.com/fsharp/FsAutoComplete)
 
@@ -276,7 +279,7 @@ This also serves as a bit of a style guide.
 
 ### Running tests
 
-Install vader-vim with `./install-vader`.
+Install vader-vim with `./install-vader` (this will install into ./vader.vim/)
 
 Run from either PowerShell or Bash.
 

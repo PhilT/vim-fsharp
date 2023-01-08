@@ -3,7 +3,7 @@ Do (Record type):
   i
   type SomeRecordType = {\<CR>
   field1: string\<CR>
-  field2: int\<CR>
+  field2: int
   }
 
 Expect:
@@ -16,7 +16,7 @@ Do (Using a Record):
   i
   let someVar = {\<CR>
   field1 = "something"\<CR>
-  field2 = 1\<CR>
+  field2 = 1
   }
 
 Expect:
@@ -29,7 +29,7 @@ Do (Returning a Record):
   i
   let someFunc () =\<CR>
   {\<CR>
-  field1 = "thing"\<CR>
+  field1 = "thing"
   }
 
 Expect:
@@ -67,7 +67,7 @@ Do (Copy and update alt):
   let state = {\<CR>
   record with\<CR>
   field1 = "filled"\<CR>
-  field2 = "mmmmm"\<CR>
+  field2 = "mmmmm"
   }
 
 Expect:
